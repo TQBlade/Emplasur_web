@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - Plásticos y Envases PET</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        h1 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { padding: 12px; border: 1px solid #ccc; text-align: left; }
+        th { background: #2980b9; color: #fff; }
+        tr:nth-child(even) { background: #f9f9f9; }
+    </style>
+</head>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="logo">🏢 EMPLANORTE</div>
+            <div class="subtitle">Sistema de Inventario de Plásticos</div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+
+<!-- Main Dashboard -->
+<div class="dashboard" id="dashboard">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏢 EMPLANORTE</h1>
+            <div class="user-info">
+                <span>Bienvenido, <span id="currentUser"></span></span>
+                <button class="btn logout-btn" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number stat-products" id="totalProducts">0</div>
+                <div class="stat-label">Productos Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number stat-sales" id="totalSales">0</div>
+                <div class="stat-label">Ventas del Mes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number stat-stock" id="lowStock">0</div>
+                <div class="stat-label">Stock Bajo</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number stat-revenue" id="totalRevenue">$0</div>
+                <div class="stat-label">Ingresos del Mes</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('inventory')">Inventario</div>
+            <div class="nav-tab" onclick="showSection('sales')">Ventas</div>
+            <div class="nav-tab" onclick="showSection('products')">Productos</div>
+        </div>
+
+        <!-- Inventory Section -->
+        <div class="content-section active" id="inventorySection">
+            <h2>📦 Gestión de Inventario</h2>
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar productos..." id="inventorySearch">
+            </div>
+            <div class="table-container">
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Stock Actual</th>
+                            <th>Stock Mínimo</th>
+                            <th>Estado</th>
+                            <th>Precio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sales Section -->
+        <div class="content-section" id="salesSection">
+            <h2>💰 Registro de Ventas</h2>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-top: 20px;">
+                <div>
+                    <h3>Nueva Venta</h3>
+                    <form id="saleForm">
+                        <div class="form-group">
+                            <label>Producto:</label>
+                            <select id="saleProduct" required>
+                                <option value="">Seleccionar producto</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cantidad:</label>
+                            <input type="number" id="saleQuantity" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cliente:</label>
+                            <input type="text" id="saleClient" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Registrar Venta</button>
+                    </form>
+                </div>
+                <div>
+                    <h3>Ventas Recientes</h3>
+                    <div class="table-container">
+                        <table id="salesTable">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Cliente</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="content-section" id="productsSection">
+            <h2>🛍 Gestión de Productos</h2>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-top: 20px;">
+                <div>
+                    <h3>Agregar Producto</h3>
+                    <form id="productForm">
+                        <div class="form-group">
+                            <label>Código:</label>
+                            <input type="text" id="productCode" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre:</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Categoría:</label>
+                            <select id="productCategory" required>
+                                <option value="">Seleccionar</option>
+                                <option value="Botellas PET">Botellas PET</option>
+                                <option value="Platos">Platos</option>
+                                <option value="Vasos">Vasos</option>
+                                <option value="Contenedores">Contenedores</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Inicial:</label>
+                            <input type="number" id="productStock" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Mínimo:</label>
+                            <input type="number" id="productMinStock" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Precio:</label>
+                            <input type="number" step="0.01" id="productPrice" min="0" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Agregar Producto</button>
+                    </form>
+                </div>
+                <div>
+                    <h3>Lista de Productos</h3>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Buscar productos..." id="productsSearch">
+                    </div>
+                    <div class="table-container">
+                        <table id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th>Stock</th>
+                                    <th>Precio</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>
