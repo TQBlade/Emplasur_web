@@ -1,55 +1,45 @@
-/* --- Vista de contactanos--- */
-/* Importar las variables de color de tu estilo principal */
+/* ================================================= */
+/* --- ARCHIVO: contactanos.css --- */
+/* ================================================= */
 
+/* Los estilos del body y header ya están en style.css */
 
-/* --- Estilos Específicos para la Vista Nosotros/Contacto --- */
-
-body {
-    background-color: var(--color-fondo-claro);
-}
-
-/* Personalización del contenedor principal */
-.container {
-    padding-top: 50px;
-    padding-bottom: 50px;
-}
-
-/* Estilo para las tarjetas de información */
-.card {
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-}
-
-/* Efecto de sombra sutil al pasar el ratón */
-.card:hover {
-    transform: translateY(-5px);
-}
-
-/* Títulos de las secciones de contacto */
-.card-title {
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
-/* Alineación y estilo de los iconos de Font Awesome */
-.card-body i {
-    color: var(--color-verde-lima); /* Iconos de contacto en verde */
-}
-
-/* Ajuste de la imagen dentro de la tarjeta */
-.card-img-top {
-    object-fit: cover;
-}
-
-/* Ajuste del título principal de la página */
-h1 {
+/* Título principal de la página */
+.titulo-principal-contacto {
+    color: var(--color-azul-oscuro);
     border-bottom: 3px solid var(--color-verde-lima);
     display: inline-block;
     padding-bottom: 10px;
 }
 
-/* Ajuste para el texto principal del contacto */
-.lead {
+/* Tarjeta personalizada para la información */
+.card-info-contacto {
+    border: none; /* Quitamos el borde por defecto */
+    border-left: 5px solid var(--color-verde-lima); /* Borde izquierdo verde */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-info-contacto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Sombra más pronunciada al pasar el ratón */
+}
+
+/* Títulos dentro de las tarjetas */
+.card-info-contacto .card-title {
+    color: var(--color-verde-lima);
     font-weight: bold;
-    color: var(--color-azul-oscuro) !important;
+    font-size: 1.5rem;
+}
+
+/* Texto principal dentro de la tarjeta */
+.card-info-contacto .lead {
+    font-weight: bold;
+    color: var(--color-azul-oscuro);
+}
+
+/* Estilo de la imagen de la fachada */
+.card-fachada img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover; /* Asegura que la imagen cubra todo el espacio sin deformarse */
 }

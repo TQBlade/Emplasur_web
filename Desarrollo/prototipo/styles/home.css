@@ -1,0 +1,212 @@
+/* --- Variables de Color --- */
+:root {
+    /* Colores aproximados basados en la imagen */
+    --color-verde-claro: #9ACD32; 
+    --color-verde-lima: #8BC34A; /* Un verde más vibrante para el botón */
+    --color-azul-oscuro: #000080; 
+    --color-texto-principal: #333;
+    --color-texto-secundario: #555;
+    --color-fondo-claro: #fff;
+    --color-fondo-forma: #4F7942; /* Verde oliva para la forma de fondo */
+    --color-fondo-forma-claro: #A9BA9D;
+    --color-map-pin: #689f38; /* Color del pin de ubicación */
+}
+
+/* --- Estilos Generales y Reset Básico --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-fondo-claro);
+    color: var(--color-texto-principal);
+    min-height: 100vh;
+    position: relative; 
+    overflow-x: hidden; /* Evita scroll horizontal por la forma de fondo */
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-texto-secundario);
+    transition: color 0.3s;
+}
+
+/* ================================================= */
+/* --- HEADER (Barra de Navegación) --- */
+/* ================================================= */
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Alineación vertical central */
+    padding: 15px 50px; /* Reduje el padding para que se vea compacto */
+    background-color: var(--color-fondo-claro);
+    position: relative;
+    z-index: 10;
+}
+
+/* --- Logo y Título --- */
+.logo-container h1 {
+    display: flex; /* Usamos Flexbox para alinear la imagen y el texto */
+    align-items: center; /* Centra verticalmente la imagen con el texto */
+    font-size: 1.2em; /* Tamaño del texto del logo */
+    font-weight: normal;
+    color: var(--color-texto-principal);
+}
+
+.logo-pequeno {
+    width: 30px; 
+    height: 30px;
+    margin-right: 8px; /* Espacio entre el ícono y el texto "Emplanorte" */
+    object-fit: contain;
+    /* La imagen ya tiene su propio estilo (círculo verde/azul) */
+}
+
+/* --- Navegación (Menú) --- */
+.menu ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin-right: 30px; 
+}
+
+.menu a {
+    text-transform: uppercase;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--color-texto-secundario);
+}
+
+/* Estilo para el botón 'INICIO' activo */
+.menu ul li:first-child a { 
+    background-color: var(--color-azul-oscuro);
+    color: var(--color-fondo-claro);
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+/* Estilo para el botón de 'INICIAR SESIÓN' */
+.btn-login {
+    background-color: var(--color-verde-lima);
+    color: var(--color-fondo-claro);
+    padding: 10px 20px;
+    border-radius: 20px; 
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap; /* Evita que el texto se rompa */
+}
+
+/* ================================================= */
+/* --- HERO SECTION (Contenido Principal) --- */
+/* ================================================= */
+
+.hero-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Centrar verticalmente el contenido */
+    padding: 80px 50px;
+    position: relative;
+    z-index: 5;
+    min-height: 80vh; 
+}
+
+.content-left {
+    max-width: 40%;
+}
+
+.content-left h2 {
+    font-size: 3em;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--color-texto-principal);
+    text-transform: uppercase;
+}
+
+.content-left p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: var(--color-texto-secundario);
+    margin-bottom: 40px;
+}
+
+/* --- Botón Ubicación y Pin --- */
+.location-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-ubicacion {
+    background-color: var(--color-verde-lima);
+    color: var(--color-fondo-claro);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.map-pin {
+    font-size: 2em; /* Tamaño del ícono de mapa */
+    color: var(--color-map-pin); 
+}
+
+/* --- Logo Grande y Fondo --- */
+.logo-grande-container {
+    /* Posicionamiento del contenedor del logo grande */
+    position: absolute; 
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px; 
+    height: 500px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1; 
+}
+
+/* Estilos para el texto del logo grande (ajusta si usas una imagen en su lugar) */
+.logo-grande {
+    font-size: 4em;
+    font-weight: bold;
+    color: var(--color-azul-oscuro);
+    position: relative;
+    z-index: 2; 
+    /* Si usas una imagen para el logo grande, esta regla no será necesaria */
+}
+
+/* --- Forma de Fondo Inferior (La "Ola" Verde/Gris) --- */
+.bg-shape-bottom {
+    position: absolute;
+    bottom: -150px; 
+    right: -150px;  
+    width: 650px; 
+    height: 650px;
+    border-radius: 50%; 
+    /* Degradado de dos tonos de verde/gris oscuro */
+    background: linear-gradient(135deg, var(--color-fondo-forma) 0%, var(--color-fondo-forma-claro) 100%); 
+    transform: rotate(20deg); 
+    z-index: 0; 
+    /* Define la forma de la "ola" en la esquina */
+    clip-path: ellipse(70% 60% at 90% 100%); 
+}
+
+/* --- Footer (Pie de Página) --- */
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    color: var(--color-texto-secundario);
+    font-size: 0.8em;
+    z-index: 10; 
+}

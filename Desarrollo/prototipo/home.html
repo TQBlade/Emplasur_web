@@ -1,29 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Emplanorte - El Plástico que Cobra Vida</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>Emplanorte</h1>
-    <h2>"El plastico que cobra vida"</h2>
-    <header>
+
+    <header class="main-header">
+        <div class="logo-container">
+            <h1>
+                <img src="/img/logo.jpg" alt="Logo Emplanorte" class="logo-pequeno">
+                Emplanorte
+            </h1>
+        </div>
+
         <nav class="menu">
             <ul>
-                <li><a href="#">Emplanorte</a></li>
-                <li><a href="">Inicio</a></li>
+                <li><a href="#">Inicio</a></li>
                 <li><a href="#">Nosotros</a></li>
-                <li><a href="/Contactanos.html">Contactanos</a></li>
-                <li><a href="/login.html">Iniciar Sesion</a></li>
+                <li><a href="/Contactanos.html">Contáctanos</a></li>
             </ul>
         </nav>
+
+        <a href="/login.html" class="btn-login">Iniciar Sesión</a>
     </header>
-    <p>Emplanorte una empresa Cucuteña que nace para fortalecer la region del Norte de Santander, ofreciendo diferentes productos y servicios para las industrias y el hogar.</p>
+
+    <main class="hero-section">
+        <div class="content-left">
+            <h2>El plástico que cobra vida</h2>
+            <p>Emplanorte, una empresa cucuteña que nace para fortalecer la región del Norte de Santander, ofreciendo diferentes productos y servicios para las industrias y el hogar.</p>
+            
+            <div class="location-group">
+                <button class="btn-ubicacion">Ubicación</button>
+                <i class="fas fa-map-marker-alt map-pin"></i>
+            </div>
+        </div>
+
+        <div class="logo-grande-container">
+            <div class="logo-grande">E</div>
+        </div>
+        <div class="bg-shape-bottom"></div>
+    </main>
 
     <footer>
-        <button type="button">Ubicación</button>
         <p>© Emplanorte 2025</p>
     </footer>
+
 </body>
 </html>
