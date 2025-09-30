@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - Emplanorte Sistema de Inventario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: #1e2875;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            background: #6b9f5e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        nav a.active {
+            background: #6b9f5e;
+        }
+
+        .btn-login {
+            background: #8bc34a;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #6b9f5e;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e2875 0%, #2d3a9f 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .content-section {
+            margin-bottom: 60px;
+        }
+
+        .content-section h3 {
+            color: #1e2875;
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .content-section p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid #6b9f5e;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6b9f5e 0%, #8bc34a 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 28px;
+        }
+
+        .feature-card h4 {
+            color: #1e2875;
+            font-size: 22px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            color: #666;
+            text-align: left;
+        }
+
+        /* Mission Section */
+        .mission-section {
+            background: linear-gradient(135deg, #6b9f5e 0%, #8bc34a 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin: 60px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .mission-section h3 {
+            color: white;
+            font-size: 36px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .mission-section p {
+            font-size: 20px;
+            color: white;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 20px;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #6b9f5e;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #1e2875;
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .cta-section h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #8bc34a;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #6b9f5e;
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: #1e2875;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-content p {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-style: italic;
+            opacity: 0.9;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .hero h2 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .content-section h3 {
+                font-size: 24px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="home.html" class="logo">
+                <div class="logo-circle">E</div>
+                <h1>Emplanorte</h1>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="home.html">INICIO</a></li>
+                    <li><a href="nosotros.html" class="active">NOSOTROS</a></li>
+                    <li><a href="contactanos.html">CONTÁCTANOS</a></li>
+                </ul>
+            </nav>
+            <a href="login.html" class="btn-login">INICIAR SESIÓN</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h2>SOBRE NUESTRO SISTEMA</h2>
+        <p>Tecnología al servicio de la gestión eficiente de inventarios</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction -->
+        <div class="content-section">
+            <h3>Quiénes Somos</h3>
+            <p><strong>Emplanorte Sistema de Inventario</strong> es una plataforma desarrollada específicamente para las necesidades operativas de Emplanorte S.A.S., empresa cucuteña líder en la fabricación y comercialización de productos plásticos para la industria y el hogar.</p>
+            <p>Nuestra solución tecnológica nace de la necesidad de optimizar los procesos internos, brindando a nuestro equipo administrativo y de ventas una herramienta robusta y confiable que centralice toda la información del inventario en tiempo real.</p>
+        </div>
+
+        <!-- Mission Section -->
+        <div class="mission-section">
+            <h3>Nuestra Misión Digital</h3>
+            <p>Proporcionar a nuestro equipo administrativo y de ventas una herramienta robusta y confiable que centralice toda la información del inventario, facilitando la toma de decisiones estratégicas y mejorando la eficiencia operacional.</p>
+        </div>
+
+        <!-- Features Section -->
+        <div class="content-section">
+            <h3>¿Qué Ofrecemos?</h3>
+            <p>Este sistema permite a administradores y vendedores acceder a funcionalidades clave para la gestión diaria:</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h4>Control en Tiempo Real</h4>
+                    <p>Consulta disponibilidad de productos instantáneamente y toma decisiones basadas en datos actualizados.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h4>Gestión de Movimientos</h4>
+                    <p>Registra y rastrea todas las entradas y salidas de inventario con precisión y trazabilidad completa.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Reportes Detallados</h4>
+                    <p>Genera reportes de ventas, stock y movimientos para análisis estratégicos del negocio.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Gestión de Relaciones</h4>
+                    <p>Administra información de clientes y proveedores de manera centralizada y eficiente.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h4>Alertas Inteligentes</h4>
+                    <p>Recibe notificaciones sobre niveles mínimos de inventario y necesidades de reabastecimiento.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h4></h4>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Disponibilidad</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Datos en Tiempo Real</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Capacidad de Registros</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number"><i class="fas fa-shield-alt"></i></div>
+                <div class="stat-label">Datos Seguros</div>
+            </div>
+        </div>
+
+        <!-- Innovation Section -->
+        <div class="content-section">
+            <h3>Comprometidos con la Innovación</h3>
+            <p>En Emplanorte entendemos que la tecnología es clave para mantener nuestra competitividad en el mercado. Este sistema refleja nuestro compromiso con la modernización de procesos y la excelencia en el servicio a nuestros clientes del Norte de Santander.</p>
+            <p>Continuamos evolucionando y adaptándonos a las necesidades del negocio, incorporando nuevas funcionalidades que optimicen aún más la gestión operativa y administrativa.</p>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h3>¿Listo para comenzar?</h3>
+            <p>Accede al sistema y optimiza tu gestión de inventario hoy mismo</p>
+            <a href="login.html" class="cta-button">INICIAR SESIÓN</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p><strong>© 2025 Emplanorte S.A.S. - Sistema de Inventario</strong></p>
+            <p>Cúcuta, Norte de Santander, Colombia</p>
+            <p class="tagline">"El Plástico que Cobra Vida, ahora con tecnología al servicio de tu negocio"</p>
+        </div>
+    </footer>
+</body>
+</html>
