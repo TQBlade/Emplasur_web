@@ -1,0 +1,55 @@
+/* --- Vista de contactanos--- */
+/* Importar las variables de color de tu estilo principal */
+
+
+/* --- Estilos Específicos para la Vista Nosotros/Contacto --- */
+
+body {
+    background-color: var(--color-fondo-claro);
+}
+
+/* Personalización del contenedor principal */
+.container {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/* Estilo para las tarjetas de información */
+.card {
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+/* Efecto de sombra sutil al pasar el ratón */
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Títulos de las secciones de contacto */
+.card-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Alineación y estilo de los iconos de Font Awesome */
+.card-body i {
+    color: var(--color-verde-lima); /* Iconos de contacto en verde */
+}
+
+/* Ajuste de la imagen dentro de la tarjeta */
+.card-img-top {
+    object-fit: cover;
+}
+
+/* Ajuste del título principal de la página */
+h1 {
+    border-bottom: 3px solid var(--color-verde-lima);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+/* Ajuste para el texto principal del contacto */
+.lead {
+    font-weight: bold;
+    color: var(--color-azul-oscuro) !important;
+}
