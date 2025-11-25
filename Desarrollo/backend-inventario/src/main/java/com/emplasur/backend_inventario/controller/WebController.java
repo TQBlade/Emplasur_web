@@ -29,4 +29,9 @@ public class WebController {
     public String mostrarNosotros() {
         return "nosotros";
     }
+
+    @GetMapping("/contactanos")
+    public String mostrarContactanos() {
+        return "contactanos";
+    }
 }
