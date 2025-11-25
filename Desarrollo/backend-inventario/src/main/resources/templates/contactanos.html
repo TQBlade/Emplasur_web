@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos - Emplanorte Sistema de Inventario</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/contactanos.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/contactanos.css">
+    <script src="/js/components.js" defer></script>
+</head>
+<body>
+    
+    <!-- HEADER -->
+    <div id="header-container" ></div>
+    <!-- MAIN CONTENT -->
+    <main>
+        
+        <!-- Contact Hero Section -->
+        <section class="contact-hero" data-header-theme="dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 text-center" data-aos="fade-down">
+                        <h1 class="hero-title">¿NECESITAS SOPORTE?</h1>
+                        <p class="hero-subtitle">Estamos aquí para ayudarte</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Info & Form Section -->
+        <section class="contact-section py-5" data-header-theme="ligth">
+            <div class="container">
+                <div class="row g-4">
+                    
+                    <!-- Contact Information -->
+                    <div class="col-lg-5" data-aos="fade-right">
+                        <div class="contact-info-card">
+                            <h3 class="info-title">Información de Contacto</h3>
+                            <p class="info-text">
+                                Si tienes problemas técnicos, preguntas sobre el uso del sistema o necesitas solicitar permisos de acceso, nuestro equipo está disponible para ayudarte.
+                            </p>
+                            
+                            <div class="contact-items">
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h5>Ubicación</h5>
+                                        <p>Cúcuta, Norte de Santander, Colombia</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h5>Soporte Técnico</h5>
+                                        <p>+57 300 522 4818<br>+57 310 267 3398<br>+57 310 267 5612</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h5>Email</h5>
+                                        <p>emplanortesas@gmail.com</p>
+                                    </div>
+                                </div>
+
+                                <div class="contact-item">
+                                    <div class="contact-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="contact-details">
+                                        <h5>Horario de Atención</h5>
+                                        <p>Lunes a Viernes: 8:00 AM - 5:00 PM<br>Sábados: 8:00 AM - 12:00 PM</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="social-media mt-4">
+                                <h5>Síguenos en Redes</h5>
+                                <div class="social-links">
+                                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="https://www.instagram.com/emplanortesas" class="social-btn"><i class="fab fa-instagram"></i></a>
+                                    <a href="https://wa.me/573005224818" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+                                    <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="col-lg-7" data-aos="fade-left">
+                        <div class="contact-form-card">
+                            <h3 class="form-title">Envíanos un Mensaje</h3>
+                            <form id="contactForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nombre Completo *</label>
+                                        <input type="text" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email *</label>
+                                        <input type="email" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Asunto *</label>
+                                        <select class="form-control" required>
+                                            <option value="">Selecciona...</option>
+                                            <option>Problema técnico</option>
+                                            <option>Solicitud de acceso</option>
+                                            <option>Pregunta general</option>
+                                            <option>Sugerencia</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Mensaje *</label>
+                                        <textarea class="form-control" rows="6" required></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-submit">
+                                            <i class="fas fa-paper-plane me-2"></i>
+                                            Enviar Solicitud
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row footer-widgets">
+                <div class="col-lg-4 col-md-6 mb-4 footer-about">
+                    <div class="logo-container mb-3">
+                        <img src="/img/logo_nombre.jpeg" alt="Emplanorte Logo" class="footer-logo">
+                        <span class="logo-text">Emplanorte</span>
+                    </div>
+                    <p class="footer-description">
+                        Empresa cucuteña líder en la fabricación y comercialización de productos plásticos para la industria y el hogar.
+                    </p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/emplanortesas" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/573005224818" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4 footer-links">
+                    <h4 class="footer-title">Navegación</h4>
+                    <ul class="footer-list">
+                        <li><a href="home.html"><i class="fas fa-chevron-right"></i><span>Inicio</span></a></li>
+                        <li><a href="nosotros.html"><i class="fas fa-chevron-right"></i><span>Nosotros</span></a></li>
+                        <li><a href="contactanos.html"><i class="fas fa-chevron-right"></i><span>Contáctanos</span></a></li>
+                        <li><a href="login.html"><i class="fas fa-chevron-right"></i><span>Iniciar Sesión</span></a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-12 mb-4 footer-contact">
+                    <h4 class="footer-title">Contacto</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-map-marker-alt"></i><span>Cúcuta, Norte de Santander</span></li>
+                        <li><i class="fas fa-phone-alt"></i><span>+57 300 522 4818</span></li>
+                        <li><i class="fas fa-envelope"></i><span>emplanortesas@gmail.com</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <p>&copy; 2025 <strong>Emplanorte S.A.S.</strong> Sistema de Gestión de Inventario</p>
+            </div>
+        </div>
+        
+        <button class="scroll-to-top" id="scrollToTop">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+        
+        window.addEventListener('scroll', () => {
+            document.querySelector('.main-header').classList.toggle('scrolled', window.scrollY > 50);
+            document.getElementById('scrollToTop').classList.toggle('visible', window.scrollY > 300);
+        });
+        
+        document.getElementById('scrollToTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

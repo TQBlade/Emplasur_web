@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EMPLANORTE S.A.S</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+    <div class="login-screen" id="loginScreen">
+
+        <!-- ==================== NUEVO FONDO ANIMADO ==================== -->
+        <div class="background-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+        <!-- ============================================================= -->
+
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-dolly"></i> EMPLANORTE
+            </div>
+            <p class="subtitle">Sistema de Gestión de Inventario</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="Nombre de usuario" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Acceder al Sistema <i class="fas fa-arrow-right"></i></button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | EMPLANORTE S.A.S</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/inventario.css">
+
+</head>
+<body>
+
+    <!-- ==================== DASHBOARD PRINCIPAL ==================== -->
+    <div class="dashboard-layout" id="dashboard" style="display: flex;">
+        
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-dolly"></i> EMPLANORTE</h3>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" onclick="showSection('inventory')"><i class="fas fa-warehouse"></i> Inventario</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('sales')"><i class="fas fa-chart-line"></i> Ventas</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('products')"><i class="fas fa-box-open"></i> Productos</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div class="user-details">
+                        <span id="currentUser">Usuario</span>
+                        <span>Administrador</span>
+                    </div>
+                </div>
+                <button class="btn-icon" onclick="alert('Cerrando sesión...')" title="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <!-- Header del Contenido -->
+            <header class="main-header">
+                <div>
+                    <h2>Panel de Control</h2>
+                    <p>Bienvenido, aquí está el resumen de tu inventario.</p>
+                </div>
+                <button class="btn btn-primary"><i class="fas fa-plus"></i> Añadir Producto</button>
+            </header>
+
+            <!-- Tarjetas de Estadísticas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Productos Totales</span>
+                        <span class="stat-number" id="totalProducts">182</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Ventas del Mes</span>
+                        <span class="stat-number" id="totalSales">34</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Alertas de Stock Bajo</span>
+                        <span class="stat-number" id="lowStock">3</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Ingresos del Mes</span>
+                        <span class="stat-number" id="totalRevenue">$1,230</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secciones de Contenido -->
+            <div class="content-wrapper">
+                
+                <!-- Sección de Inventario -->
+                <div class="content-section active" id="inventorySection">
+                    <div class="section-header">
+                        <h3><i class="fas fa-warehouse"></i> Inventario Actual</h3>
+                        <div class="search-bar">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Buscar por nombre o código..." id="inventorySearch">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="inventoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Stock Actual</th>
+                                    <th>Stock Mínimo</th>
+                                    <th>Estado</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryBody">
+                                <!-- Filas de ejemplo para visualización -->
+                                <tr>
+                                    <td>PET-001</td>
+                                    <td>Botella 500ml Transparente</td>
+                                    <td>Botellas PET</td>
+                                    <td>1500</td>
+                                    <td>500</td>
+                                    <td><span class="status-pill status-ok">En Stock</span></td>
+                                    <td>$0.25</td>
+                                    <td class="actions">
+                                        <button class="btn-icon" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn-icon btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CNT-003</td>
+                                    <td>Contenedor Comida 1L</td>
+                                    <td>Contenedores</td>
+                                    <td>250</td>
+                                    <td>300</td>
+                                    <td><span class="status-pill status-low">Stock Bajo</span></td>
+                                    <td>$0.80</td>
+                                    <td class="actions">
+                                        <button class="btn-icon" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn-icon btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td>VAS-002</td>
+                                    <td>Vaso Plástico 12oz</td>
+                                    <td>Vasos</td>
+                                    <td>0</td>
+                                    <td>200</td>
+                                    <td><span class="status-pill status-out">Agotado</span></td>
+                                    <td>$0.10</td>
+                                    <td class="actions">
+                                        <button class="btn-icon" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn-icon btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección de Ventas -->
+                <div class="content-section" id="salesSection">
+                    <div class="grid-layout">
+                        <div class="form-card">
+                            <h3><i class="fas fa-cash-register"></i> Registrar Nueva Venta</h3>
+                            <form id="saleForm">
+                                <div class="form-group">
+                                    <label>Producto:</label>
+                                    <select id="saleProduct" required><option>Botella 500ml</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cantidad:</label>
+                                    <input type="number" id="saleQuantity" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cliente (Opcional):</label>
+                                    <input type="text" id="saleClient">
+                                </div>
+                                <button type="submit" class="btn btn-primary full-width">Registrar Venta</button>
+                            </form>
+                        </div>
+                        <div class="table-card">
+                             <h3><i class="fas fa-receipt"></i> Ventas Recientes</h3>
+                             <div class="table-container">
+                                <table id="salesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="salesBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección de Productos -->
+                <div class="content-section" id="productsSection">
+                     <!-- El contenido de productos irá aquí -->
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Script mínimo para la navegación de pestañas -->
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.getElementById(sectionId + 'Section').classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
