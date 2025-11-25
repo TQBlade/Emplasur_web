@@ -16,7 +16,7 @@ function loadHeader() {
             <div class="row align-items-center header-content">
                 <div class="col-lg-3 col-md-4 col-6">
                     <div class="logo-container">
-                        <a href="home.html" class="d-flex align-items-center">
+                        <a href="/home" class="d-flex align-items-center">
                             <img src="/img/logo_nombre.jpeg" alt="Emplanorte Logo" class="logo-img">
                             <span class="logo-text ms-2">Emplanorte</span>
                         </a>
@@ -27,19 +27,19 @@ function loadHeader() {
                     <nav class="main-nav">
                         <ul class="nav-list d-flex justify-content-center align-items-center mb-0">
                             <li class="nav-item">
-                                <a href="home.html" class="nav-link" id="nav-home">
+                                <a href="/home" class="nav-link" id="nav-home">
                                     <i class="fas fa-home me-1"></i>
                                     <span>Inicio</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="nosotros.html" class="nav-link" id="nav-nosotros">
+                                <a href="/nosotros" class="nav-link" id="nav-nosotros">
                                     <i class="fas fa-info-circle me-1"></i>
                                     <span>Nosotros</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="contactanos.html" class="nav-link" id="nav-contactanos">
+                                <a href="/contactanos" class="nav-link" id="nav-contactanos">
                                     <i class="fas fa-envelope me-1"></i>
                                     <span>Contáctanos</span>
                                 </a>
@@ -49,7 +49,7 @@ function loadHeader() {
                 </div>
                 
                 <div class="col-lg-3 col-md-4 col-6 text-end">
-                    <a href="login.html" class="btn btn-header-login">
+                    <a href="/login" class="btn btn-header-login">
                         <i class="fas fa-sign-in-alt me-2"></i>
                         <span>Iniciar Sesión</span>
                     </a>
@@ -65,9 +65,9 @@ function loadHeader() {
         
         <div class="mobile-menu" id="mobile-menu">
             <ul class="mobile-nav-list">
-                <li><a href="home.html" id="mobile-nav-home"><i class="fas fa-home"></i> Inicio</a></li>
-                <li><a href="nosotros.html" id="mobile-nav-nosotros"><i class="fas fa-info-circle"></i> Nosotros</a></li>
-                <li><a href="contactanos.html" id="mobile-nav-contactanos"><i class="fas fa-envelope"></i> Contáctanos</a></li>
+                <li><a href="/home" id="mobile-nav-home"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="/nosotros" id="mobile-nav-nosotros"><i class="fas fa-info-circle"></i> Nosotros</a></li>
+                <li><a href="/contactanos" id="mobile-nav-contactanos"><i class="fas fa-envelope"></i> Contáctanos</a></li>
             </ul>
         </div>
     </header>
@@ -105,10 +105,10 @@ function loadFooter() {
                 <div class="col-lg-4 col-md-6 mb-4 footer-links">
                     <h4 class="footer-title">Navegación</h4>
                     <ul class="footer-list">
-                        <li><a href="home.html"><i class="fas fa-chevron-right"></i><span>Inicio</span></a></li>
-                        <li><a href="nosotros.html"><i class="fas fa-chevron-right"></i><span>Nosotros</span></a></li>
-                        <li><a href="contactanos.html"><i class="fas fa-chevron-right"></i><span>Contáctanos</span></a></li>
-                        <li><a href="login.html"><i class="fas fa-chevron-right"></i><span>Iniciar Sesión (Sistema)</span></a></li>
+                        <li><a href="/home"><i class="fas fa-chevron-right"></i><span>Inicio</span></a></li>
+                        <li><a href="/nosotros"><i class="fas fa-chevron-right"></i><span>Nosotros</span></a></li>
+                        <li><a href="/contactanos"><i class="fas fa-chevron-right"></i><span>Contáctanos</span></a></li>
+                        <li><a href="/login"><i class="fas fa-chevron-right"></i><span>Iniciar Sesión (Sistema)</span></a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4 col-md-12 mb-4 footer-contact">
@@ -140,7 +140,7 @@ function loadFooter() {
  * Marca el enlace de navegación activo según la página actual.
  */
 function setActiveNavLink() {
-    let currentPage = window.location.pathname.split('/').pop() || 'home.html';
+    let currentPage = window.location.pathname.split('/').pop() || '/home';
     
     // Eliminar parámetros y anclas
     currentPage = currentPage.split('?')[0].split('#')[0].toLowerCase();

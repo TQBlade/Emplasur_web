@@ -16,21 +16,19 @@
 
     <div class="login-screen" id="loginScreen">
 
-        <!-- ==================== NUEVO FONDO ANIMADO ==================== -->
         <div class="background-shapes">
             <div class="shape shape-1"></div>
             <div class="shape shape-2"></div>
             <div class="shape shape-3"></div>
             <div class="shape shape-4"></div>
         </div>
-        <!-- ============================================================= -->
-
         <div class="login-card">
             <div class="logo">
                 <i class="fas fa-dolly"></i> EMPLANORTE
             </div>
             <p class="subtitle">Sistema de Gestión de Inventario</p>
-            <form id="loginForm">
+            
+            <form id="loginForm" onsubmit="event.preventDefault(); iniciarSesion();">
                 <div class="input-group">
                     <i class="fas fa-user"></i>
                     <input type="text" id="username" placeholder="Nombre de usuario" required>
@@ -39,10 +37,70 @@
                     <i class="fas fa-lock"></i>
                     <input type="password" id="password" placeholder="Contraseña" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Acceder al Sistema <i class="fas fa-arrow-right"></i></button>
+                
+                <button type="button" onclick="iniciarSesion()" class="btn-login">Iniciar Sesión</button>
+                
+                <div class="text-center mt-3">
+                    <a href="/" style="text-decoration: none; color: #666; font-size: 0.9rem;">Volver al Inicio</a>
+                </div>
             </form>
         </div>
     </div>
+
+    <script>
+        async function iniciarSesion() {
+            // 1. Obtener valores
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+
+            // Validación simple
+            if (!usernameInput || !passwordInput) {
+                alert("Por favor ingrese usuario y contraseña");
+                return;
+            }
+
+            // 2. Preparar datos para el Backend
+            const credenciales = {
+                username: usernameInput,
+                password: passwordInput
+            };
+
+            const boton = document.querySelector('.btn-login');
+            boton.innerText = "Verificando...";
+            boton.disabled = true;
+
+            try {
+                // 3. Enviar petición al Backend
+                const respuesta = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(credenciales)
+                });
+
+                // 4. Verificar respuesta
+                if (respuesta.ok) {
+                    const usuario = await respuesta.json();
+                    
+                    // Guardar sesión en el navegador
+                    localStorage.setItem('usuarioSesion', JSON.stringify(usuario));
+                    
+                    // REDIRECCIONAR AL INVENTARIO
+                    window.location.href = '/inventario'; 
+                } else {
+                    alert('Error: Usuario o contraseña incorrectos');
+                    boton.innerText = "Iniciar Sesión";
+                    boton.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('No se pudo conectar con el servidor.');
+                boton.innerText = "Iniciar Sesión";
+                boton.disabled = false;
+            }
+        }
+    </script>
 
 </body>
 </html>
