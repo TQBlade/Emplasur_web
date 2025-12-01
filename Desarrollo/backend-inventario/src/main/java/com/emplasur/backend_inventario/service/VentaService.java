@@ -1,5 +1,8 @@
 package com.emplasur.backend_inventario.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +10,6 @@ import com.emplasur.backend_inventario.dto.VentaDTO;
 import com.emplasur.backend_inventario.entity.Lote;
 import com.emplasur.backend_inventario.entity.Producto;
 import com.emplasur.backend_inventario.entity.Venta;
-import com.emplasur.backend_inventario.repository.ClienteRepository;
 import com.emplasur.backend_inventario.repository.ProductoRepository;
 import com.emplasur.backend_inventario.repository.UsuarioRepository;
 import com.emplasur.backend_inventario.repository.VentaRepository;
@@ -26,8 +28,6 @@ public class VentaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private ClienteRepository clienteRepository;
 
     // LÓGICA CORE: Registrar venta y descontar stock
     @Transactional
@@ -87,7 +87,20 @@ public class VentaService {
         
         // Cliente y detalle (que ahora vienen en el DTO)
         // ... setear cliente y detalle ...
+        
 
         return ventaRepository.save(venta);
-    }   
+    }
+
+    // Listar ventas por rango de fechas
+    public List<Venta> listarVentasPorFecha(LocalDateTime inicio, LocalDateTime fin) {
+        if (inicio == null || fin == null) {
+            return ventaRepository.findAll();
+        }
+        return ventaRepository.findByFechaBetween(inicio, fin);
+    }
+
+    public List<Venta> listarVentas() {
+        return ventaRepository.findAll();
+    }
 }

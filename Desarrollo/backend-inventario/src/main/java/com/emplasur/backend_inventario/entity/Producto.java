@@ -1,10 +1,19 @@
 package com.emplasur.backend_inventario.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity
@@ -39,7 +48,8 @@ public class Producto {
     // Suma: (pacas * tamaño) + sueltas
     public Integer getTotalUnidades() {
         int totalPacas = lotes.stream().mapToInt(l -> l.getCantidadPacas() * l.getTamanoPaca()).sum();
-        return totalPacas + (unidadesSueltas != null ? unidadesSueltas : 0);
+        int sueltas = (unidadesSueltas != null) ? unidadesSueltas.intValue() : 0;
+        return totalPacas + sueltas;
     }
     
     public String getEstado() {

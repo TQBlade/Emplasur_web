@@ -1,133 +1,95 @@
-// ================== DB GLOBAL + HELPERS ==================
+// ================== DASHBOARD PRINCIPAL (KPIs REALEAS) ==================
 
-window.db = (() => {
-  const saved = localStorage.getItem('emplaDb');
-  if (saved) {
-    try { return JSON.parse(saved); } catch(e){}
-  }
-  return {
-    products: [
-      {
-        id: 1,
-        code: 'PET-001',
-        name: 'Botella 500ml Transparente',
-        cat: 'Envases PET',
-        cost: 200,
-        price: 500,
-        minUnits: 500,
-        lots: [{ size: 100, packs: 3 }, { size: 80, packs: 2 }],
-        looseUnits: 20
-      },
-      {
-        id: 2,
-        code: 'CL-001',
-        name: 'Envase cloro 1L',
-        cat: 'Envases polietileno',
-        cost: 300,
-        price: 800,
-        minUnits: 300,
-        lots: [{ size: 60, packs: 5 }],
-        looseUnits: 0
-      },
-      {
-        id: 3,
-        code: 'HOG-001',
-        name: 'Balde 10L',
-        cat: 'Artículos hogar',
-        cost: 4000,
-        price: 7000,
-        minUnits: 50,
-        lots: [],
-        looseUnits: 15
-      }
-    ],
-    sales: []
-  };
-})();
-
-function saveDb() {
-  localStorage.setItem('emplaDb', JSON.stringify(window.db));
-}
-
-function money(n) {
-  n = n || 0;
-  return '$' + n.toLocaleString('es-CO', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  });
-}
-
-function totalPacks(p) {
-  return (p.lots || []).reduce((a, l) => a + l.packs, 0);
-}
-function totalUnitsFromPacks(p) {
-  return (p.lots || []).reduce((a, l) => a + l.packs * l.size, 0);
-}
-function totalUnits(p) {
-  return totalUnitsFromPacks(p) + (p.looseUnits || 0);
-}
-
-function statusBadge(p) {
-  const t = totalUnits(p);
-  if (t <= 0) return '<span class="badge out">Agotado</span>';
-  if (t < p.minUnits) return '<span class="badge low">Bajo</span>';
-  return '<span class="badge ok">En stock</span>';
-}
-
-function todayRangeMs() {
-  const now = new Date();
-  const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
-  const start = new Date(y, m, d, 0, 0, 0, 0).getTime();
-  const end = new Date(y, m, d, 23, 59, 59, 999).getTime();
-  return { start, end };
-}
-
-function refreshKPIs() {
-  const el = document.getElementById('kpiProducts');
-  if (!el) return; // página distinta
-
-  const db = window.db;
-  el.textContent = db.products.length;
-
-  const { start, end } = todayRangeMs();
-  const todays = db.sales.filter(s => s.date >= start && s.date <= end);
-
-  document.getElementById('kpiSales').textContent = todays.length;
-  const ingresosDia = todays.reduce((a, s) => a + s.total, 0);
-  document.getElementById('kpiRevenue').textContent = money(ingresosDia);
-
-  const alerts = db.products.filter(p => totalUnits(p) < p.minUnits).length;
-  document.getElementById('kpiAlerts').textContent = alerts;
-}
-
-// llamado desde otros módulos cuando cambie algo
-function refreshAll() {
-  if (window.renderInventory) window.renderInventory();
-  if (window.renderProducts) window.renderProducts();
-  if (window.renderSales) window.renderSales();
-  refreshKPIs();
-}
-
-// Navegación lateral
 document.addEventListener('DOMContentLoaded', () => {
+  // Cargar datos apenas inicia
+  refreshDashboard();
+
+  // Configurar botón de Logout
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) {
+    btnLogout.onclick = () => {
+      localStorage.removeItem('usuarioSesion');
+      window.location.href = '/login'; 
+    };
+  }
+
+  // Navegación lateral (Tabs)
   const nav = document.getElementById('sideNav');
   if (nav) {
     nav.addEventListener('click', e => {
       const a = e.target.closest('a'); if (!a) return;
       e.preventDefault();
+      
+      // Activar clase visual
       document.querySelectorAll('.nav a').forEach(x => x.classList.remove('active'));
       a.classList.add('active');
-      const tab = a.dataset.tab;
-      document.getElementById('inventorySection').style.display = tab === 'inventory' ? 'block' : 'none';
-      document.getElementById('salesSection').style.display     = tab === 'sales'     ? 'block' : 'none';
-      document.getElementById('productsSection').style.display  = tab === 'products'  ? 'block' : 'none';
+      
+      // Mostrar sección correspondiente
+      const tab = a.dataset.tab; // inventory, sales, products
+      
+      // Ocultar todas
+      document.getElementById('inventorySection').style.display = 'none';
+      document.getElementById('salesSection').style.display = 'none';
+      document.getElementById('productsSection').style.display = 'none';
+      
+      // Mostrar la seleccionada
+      const section = document.getElementById(tab + 'Section');
+      if(section) section.style.display = 'block';
+
+      // Recargar datos específicos según la pestaña
+      if (tab === 'inventory' && window.renderInventory) window.renderInventory();
+      if (tab === 'products' && window.renderProducts) window.renderProducts();
+      if (tab === 'sales' && window.renderSales) window.renderSales();
     });
   }
-
-  const btnLogout = document.getElementById('btnLogout');
-  if (btnLogout) {
-    btnLogout.onclick = () => { window.location.href = 'login.html'; };
-  }
-
-  refreshAll();
 });
+
+// Función central para actualizar los cuadritos de arriba (KPIs)
+async function refreshDashboard() {
+  try {
+    // 1. Obtener Productos para contar totales y alertas
+    const resProd = await fetch('/api/productos');
+    const productos = await resProd.json();
+
+    // KPI 1: Productos Totales
+    const kpiProducts = document.getElementById('kpiProducts');
+    if (kpiProducts) kpiProducts.textContent = productos.length;
+
+    // KPI 4: Alertas de Stock (Calculado: totalUnidades < stockMinimo)
+    const alertas = productos.filter(p => p.totalUnidades < p.stockMinimo).length;
+    const kpiAlerts = document.getElementById('kpiAlerts');
+    if (kpiAlerts) kpiAlerts.textContent = alertas;
+
+
+    // 2. Obtener Ventas de HOY para Ingresos
+    const hoy = new Date().toISOString().split('T')[0]; // "2023-11-25"
+    const resVentas = await fetch(`/api/ventas?desde=${hoy}&hasta=${hoy}`);
+    const ventasHoy = await resVentas.json();
+
+    // KPI 2: Cantidad de Ventas hoy
+    const kpiSales = document.getElementById('kpiSales');
+    if (kpiSales) kpiSales.textContent = ventasHoy.length;
+
+    // KPI 3: Dinero ($) Ingresos hoy
+    const totalIngresos = ventasHoy.reduce((sum, v) => sum + v.totalVenta, 0);
+    const kpiRevenue = document.getElementById('kpiRevenue');
+    if (kpiRevenue) kpiRevenue.textContent = money(totalIngresos);
+
+  } catch (error) {
+    console.error("Error actualizando Dashboard:", error);
+  }
+}
+
+// Helper global de moneda
+function money(n) {
+  return '$' + (n || 0).toLocaleString('es-CO', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+}
+
+// Función global para que otros scripts pidan actualizar el dashboard
+window.refreshAll = function() {
+  refreshDashboard();
+  if (window.renderInventory) window.renderInventory();
+};

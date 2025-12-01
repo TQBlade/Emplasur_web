@@ -1,15 +1,17 @@
 package com.emplasur.backend_inventario.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.emplasur.backend_inventario.dto.ProductoDTO;
 import com.emplasur.backend_inventario.entity.Lote;
 import com.emplasur.backend_inventario.entity.Producto;
 import com.emplasur.backend_inventario.repository.ProductoRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductoService {
@@ -72,5 +74,9 @@ public class ProductoService {
     // 5. Eliminar producto
     public void eliminarProducto(Long id) {
         productoRepository.deleteById(id);
+    }
+
+    public Producto guardarProducto(Producto producto) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
