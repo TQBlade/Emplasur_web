@@ -684,3 +684,17 @@ table td{
   font-size:0.78rem !important;
   white-space:nowrap;
 }
+
+
+/* Corrección para el menú desplegable en modo oscuro */
+select.select option {
+    background-color: #1f2937; /* Un azul oscuro que combine con tu tema */
+    color: #ffffff;            /* Texto blanco */
+}
+
+/* Asegurarnos que el input select también tenga el fondo correcto */
+select.select {
+    background-color: #1f2937;
+    color: #ffffff;
+    border: 1px solid #374151; /* Borde sutil */
+}

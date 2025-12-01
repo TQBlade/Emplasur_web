@@ -29,6 +29,7 @@
       <li><a href="#" class="active" data-tab="inventory"><i class="fa-solid fa-warehouse"></i>Inventario</a></li>
       <li><a href="#" data-tab="sales"><i class="fa-solid fa-receipt"></i>Ventas</a></li>
       <li><a href="#" data-tab="products"><i class="fa-solid fa-box-open"></i>Productos</a></li>
+      <li><a href="#" data-tab="clients"><i class="fa-solid fa-users"></i>Clientes</a></li>
     </ul>
 
     <div class="userbar">
@@ -259,6 +260,34 @@
         </div>
       </div>
     </section>
+
+    <!-- ================= CLIENTES ================= -->
+     <section class="section" id="clientsSection" style="display:none">
+      <div class="card">
+        <div class="section-hd">
+          <div style="font-weight:800"><i class="fa-solid fa-users"></i> Gestión de Clientes</div>
+          <div>
+            <button id="btnAddClientTop" class="btn-primary">
+              <i class="fa-solid fa-user-plus"></i> Nuevo Cliente
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="cliTable">
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Nombre Completo</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cliBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -327,9 +356,42 @@
           </div>
         </div>
 
-        <div style="margin-top:12px">
-          <div class="label">Cliente (opcional)</div>
-          <input class="input" id="saleClient" placeholder="Nombre del cliente">
+        <div style="margin-top:12px; border-top:1px solid #eee; padding-top:10px;">
+          <div class="label" style="margin-bottom:5px">Cliente</div>
+          
+          <div class="row" style="gap:5px">
+            <div style="flex:1">
+              <input class="input" id="saleClientDoc" placeholder="Documento de identidad">
+            </div>
+            <button type="button" id="btnSearchClient" class="btn-secondary" style="width:auto">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+
+          <div id="clientInfoBox" style="margin-top:8px; padding:10px; background:#f8f9fa; border-radius:6px; display:none;">
+            <input type="hidden" id="selectedClientId">
+            <div id="foundClientMsg" style="color:#2ecc71; font-weight:600; display:none; margin-bottom:5px">
+              <i class="fa-solid fa-check-circle"></i> <span id="foundClientName"></span>
+            </div>
+
+            <div id="newClientForm" style="display:none">
+              <div style="color:#e67e22; font-size:0.9em; margin-bottom:5px">
+                <i class="fa-solid fa-circle-exclamation"></i> Cliente nuevo. Complete los datos:
+              </div>
+              <div class="row">
+                <input class="input" id="nc_name1" placeholder="1er Nombre *" required>
+                <input class="input" id="nc_name2" placeholder="2do Nombre">
+              </div>
+              <div class="row" style="margin-top:5px">
+                <input class="input" id="nc_last1" placeholder="1er Apellido *" required>
+                <input class="input" id="nc_last2" placeholder="2do Apellido">
+              </div>
+              <div class="row" style="margin-top:5px">
+                <input class="input" id="nc_tel" placeholder="Teléfono">
+                <input class="input" id="nc_email" placeholder="Email">
+              </div>
+            </div>
+          </div>
         </div>
 
         <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:10px">
@@ -441,12 +503,74 @@
   </div>
 </div>
 
+<!--Modal-->
+<div class="modal-backdrop" id="clientModal" style="display:none">
+  <div class="modal">
+    <div class="modal-hd">
+      <strong><i class="fa-solid fa-user"></i> Datos del Cliente</strong>
+      <button class="close" data-close="clientModal"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-bd">
+      <form id="clientForm">
+        <input type="hidden" id="c_id"> <div class="form">
+          <div class="label">Documento *</div>
+          <input class="input" id="c_doc" required>
+          
+          <div class="row" style="margin-top:10px">
+            <div>
+              <div class="label">1er Nombre *</div>
+              <input class="input" id="c_name1" required>
+            </div>
+            <div>
+              <div class="label">2do Nombre</div>
+              <input class="input" id="c_name2">
+            </div>
+          </div>
+          
+          <div class="row" style="margin-top:10px">
+            <div>
+              <div class="label">1er Apellido *</div>
+              <input class="input" id="c_last1" required>
+            </div>
+            <div>
+              <div class="label">2do Apellido</div>
+              <input class="input" id="c_last2">
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <div class="label">Teléfono</div>
+              <input class="input" id="c_tel">
+            </div>
+            <div>
+              <div class="label">Email</div>
+              <input class="input" id="c_email" type="email">
+            </div>
+          </div>
+          
+          <div style="margin-top:10px">
+            <div class="label">Dirección</div>
+            <input class="input" id="c_dir">
+          </div>
+
+          <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end">
+            <button type="button" class="btn-primary" style="background:#263752;color:#d7e4ff" data-close="clientModal">Cancelar</button>
+            <button class="btn-primary" type="submit">Guardar Cliente</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- =============== SCRIPTS =============== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="js/app.js"></script>
 <script src="js/inventario.js"></script>
 <script src="js/productos.js"></script>
 <script src="js/ventas.js"></script>
+<script src="js/clientes.js"></script>
 
 </body>
 </html>

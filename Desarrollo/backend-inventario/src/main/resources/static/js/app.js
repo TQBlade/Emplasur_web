@@ -20,26 +20,29 @@ document.addEventListener('DOMContentLoaded', () => {
       const a = e.target.closest('a'); if (!a) return;
       e.preventDefault();
       
-      // Activar clase visual
       document.querySelectorAll('.nav a').forEach(x => x.classList.remove('active'));
       a.classList.add('active');
       
-      // Mostrar sección correspondiente
-      const tab = a.dataset.tab; // inventory, sales, products
+      const tab = a.dataset.tab; 
       
-      // Ocultar todas
-      document.getElementById('inventorySection').style.display = 'none';
-      document.getElementById('salesSection').style.display = 'none';
-      document.getElementById('productsSection').style.display = 'none';
+      // SOLUCIÓN AL PROBLEMA VISUAL: Ocultar explícitamente TODAS las secciones
+      const sections = ['inventory', 'sales', 'products', 'clients']; // Agregamos 'clients'
+      sections.forEach(s => {
+          const el = document.getElementById(s + 'Section');
+          if(el) el.style.display = 'none';
+      });
       
-      // Mostrar la seleccionada
-      const section = document.getElementById(tab + 'Section');
-      if(section) section.style.display = 'block';
+      // Mostrar solo la seleccionada
+      const activeSection = document.getElementById(tab + 'Section');
+      if(activeSection) activeSection.style.display = 'block';
 
-      // Recargar datos específicos según la pestaña
+      // Recargar datos
       if (tab === 'inventory' && window.renderInventory) window.renderInventory();
       if (tab === 'products' && window.renderProducts) window.renderProducts();
       if (tab === 'sales' && window.renderSales) window.renderSales();
+      
+      // SOLUCIÓN AL PROBLEMA DE CARGA: Llamar renderClients al hacer click en la pestaña
+      if (tab === 'clients' && window.renderClients) window.renderClients();
     });
   }
 });

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.emplasur.backend_inventario.dto.ProductoDTO;
 import com.emplasur.backend_inventario.entity.Producto;
 import com.emplasur.backend_inventario.service.ProductoService;
 
@@ -33,8 +34,14 @@ public class ProductoController {
 
     // POST: Guardar un nuevo producto
     @PostMapping
-    public Producto guardar(@RequestBody Producto producto) {
-        return productoService.guardarProducto(producto);
+    public ResponseEntity<?> guardar(@RequestBody ProductoDTO productoDTO) { // Recibe DTO
+        try {
+            // OJO AQUÍ: Debe llamar a 'guardarDesdeDTO', no a 'guardarProducto'
+            Producto nuevo = productoService.guardarDesdeDTO(productoDTO);
+            return ResponseEntity.ok(nuevo);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
     }
 
     // DELETE: Borrar un producto por ID

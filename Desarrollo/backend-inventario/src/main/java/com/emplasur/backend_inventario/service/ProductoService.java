@@ -19,29 +19,26 @@ public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    // 1. Listar todos los productos (incluye sus lotes automáticamente gracias a JPA)
     public List<Producto> listarProductos() {
         return productoRepository.findAll();
     }
 
-    // 2. Obtener un producto por ID
     public Optional<Producto> obtenerPorId(Long id) {
         return productoRepository.findById(id);
     }
 
-    // 3. Obtener por código (Usado para verificar duplicados o editar)
-    public Optional<Producto> obtenerPorCodigo(String codigo) {
-        return productoRepository.findByCodigo(codigo);
+    public void eliminarProducto(Long id) {
+        productoRepository.deleteById(id);
     }
 
-    // 4. GUARDAR O ACTUALIZAR (La lógica compleja)
+    // ESTE ES EL MÉTODO QUE TE FALTA O ESTÁ VACÍO
     @Transactional
     public Producto guardarDesdeDTO(ProductoDTO dto) {
-        // Buscamos si ya existe un producto con ese código
+        // 1. Buscar o crear
         Producto producto = productoRepository.findByCodigo(dto.getCode())
-                .orElse(new Producto()); // Si no existe, creamos uno nuevo en memoria
+                .orElse(new Producto()); 
 
-        // Mapeamos los datos simples
+        // 2. Mapear datos
         producto.setCodigo(dto.getCode());
         producto.setNombre(dto.getName());
         producto.setCategoria(dto.getCat());
@@ -50,33 +47,21 @@ public class ProductoService {
         producto.setStockMinimo(dto.getMinUnits());
         producto.setUnidadesSueltas(dto.getLooseUnits());
 
-        // GESTIÓN DE LOTES (PACAS)
-        // Limpiamos los lotes anteriores para evitar duplicados o inconsistencias al editar
-        producto.getLotes().clear();
-
-        // Si el DTO trae lotes, los convertimos a Entidades y los agregamos
+        // 3. Gestionar Lotes
+        if (producto.getLotes() != null) {
+            producto.getLotes().clear(); // Borrar anteriores para reescribir
+        }
+        
         if (dto.getLots() != null) {
-            for (ProductoDTO.LoteDTO loteDto : dto.getLots()) {
+            for (ProductoDTO.LoteDTO lDTO : dto.getLots()) {
                 Lote lote = new Lote();
-                lote.setTamanoPaca(loteDto.getSize());
-                lote.setCantidadPacas(loteDto.getPacks());
-                lote.setProducto(producto); // Vinculamos el lote al producto (Relación Bidireccional)
-                
-                // Agregamos a la lista del producto
+                lote.setTamanoPaca(lDTO.getSize());
+                lote.setCantidadPacas(lDTO.getPacks());
+                lote.setProducto(producto);
                 producto.getLotes().add(lote);
             }
         }
 
-        // Guardamos todo en cascada (Producto + Lotes)
         return productoRepository.save(producto);
-    }
-
-    // 5. Eliminar producto
-    public void eliminarProducto(Long id) {
-        productoRepository.deleteById(id);
-    }
-
-    public Producto guardarProducto(Producto producto) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

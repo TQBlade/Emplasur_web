@@ -19,8 +19,20 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre_completo", nullable = false)
-    private String nombreCompleto;
+    @Column(unique = true, nullable = false)
+    private String documento;
+
+    @Column(name = "primer_nombre", nullable = false)
+    private String primerNombre;
+
+    @Column(name = "segundo_nombre")
+    private String segundoNombre;
+
+    @Column(name = "primer_apellido", nullable = false)
+    private String primerApellido;
+
+    @Column(name = "segundo_apellido")
+    private String segundoApellido;
 
     private String telefono;
     private String email;
@@ -32,5 +44,13 @@ public class Cliente {
     @PrePersist
     public void prePersist() {
         this.fechaRegistro = LocalDateTime.now();
+    }
+
+    // Helper para mostrar nombre completo en reportes
+    public String getNombreCompleto() {
+        return primerNombre + " " + 
+               (segundoNombre != null ? segundoNombre + " " : "") + 
+               primerApellido + " " + 
+               (segundoApellido != null ? segundoApellido : "");
     }
 }
