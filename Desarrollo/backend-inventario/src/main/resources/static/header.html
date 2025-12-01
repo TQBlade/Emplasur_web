@@ -9,51 +9,48 @@
     <script src="/js/components.js" defer></script>
 </head>
 <body>
-    <header class="main-header fixed-top">
-        <div class="container-fluid">
-            <div class="row align-items-center header-content">
-                <div class="col-lg-3 col-md-4 col-6">
-                    <div class="logo-container">
-                        <a href="/home" class="d-flex align-items-center">
-                            <img src="/img/logo_nombre.jpeg" alt="Emplanorte Logo" class="logo-img">
-                            <span class="logo-text ms-2">Emplanorte</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6 col-md-4 d-none d-md-block">
-                    <nav class="main-nav">
-                        <ul class="nav-list d-flex justify-content-center align-items-center mb-0">
-                            <li class="nav-item">
-                                <a href="/home" class="nav-link">
-                                    <i class="fas fa-home me-1"></i>
-                                    <span>Inicio</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/nosotros" class="nav-link">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    <span>Nosotros</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/contactanos" class="nav-link active">
-                                    <i class="fas fa-envelope me-1"></i>
-                                    <span>Contáctanos</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                
-                <div class="col-lg-3 col-md-4 col-6 text-end">
-                    <a href="/login" class="btn btn-header-login">
-                        <i class="fas fa-sign-in-alt me-2"></i>
-                        <span>Iniciar Sesión</span>
-                    </a>
-                </div>
-            </div>
+    <!-- HEADER -->
+   <header class="main-header fixed-top">
+  <div class="container-fluid">
+    <div class="row align-items-center header-content">
+      <!-- Logo -->
+      <div class="col-lg-3 col-md-4 col-6">
+        <div class="logo-container">
+          <a href="/">
+            <img src="/img/Circulo.png" alt="Emplanorte" class="logo-img">
+            <span class="logo-text ms-1">EMPLANORTE</span>
+          </a>
         </div>
-    </header>
-</body>
-</html>
+      </div>
+
+      <!-- Nav -->
+      <div class="col-lg-6 d-none d-md-block">
+        <nav class="main-nav">
+          <ul class="nav-list mb-0">
+            <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="/nosotros">Nosotros</a></li>
+            <li class="nav-item"><a class="nav-link" href="/contactanos">Contáctanos</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- CTA + toggle móvil -->
+      <div class="col-lg-3 col-md-8 col-6 text-end position-relative">
+        <a href="/login" class="btn btn-header-login"><span>Iniciar Sesión</span></a>
+        <div class="mobile-menu-toggle d-md-none">
+          <button class="btn" id="btnMobile"><i class="fas fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul class="mobile-nav-list">
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/nosotros">Nosotros</a></li>
+      <li><a href="/contactanos">Contáctanos</a></li>
+    </ul>
+  </div>
+</header>
+

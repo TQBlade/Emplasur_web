@@ -1,106 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | EMPLANORTE S.A.S</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | EMPLANORTE S.A.S</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="/css/login.css">
+  <!-- Estilos del login -->
+  <link rel="stylesheet" href="./css/login.css">
 </head>
 <body>
 
-    <div class="login-screen" id="loginScreen">
 
-        <div class="background-shapes">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
-        <div class="login-card">
-            <div class="logo">
-                <i class="fas fa-dolly"></i> EMPLANORTE
-            </div>
-            <p class="subtitle">Sistema de Gestión de Inventario</p>
-            
-            <form id="loginForm" onsubmit="event.preventDefault(); iniciarSesion();">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="username" placeholder="Nombre de usuario" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="password" placeholder="Contraseña" required>
-                </div>
-                
-                <button type="button" onclick="iniciarSesion()" class="btn-login">Iniciar Sesión</button>
-                
-                <div class="text-center mt-3">
-                    <a href="/" style="text-decoration: none; color: #666; font-size: 0.9rem;">Volver al Inicio</a>
-                </div>
-            </form>
-        </div>
+
+  <div class="login-screen" id="loginScreen">
+    <!-- Fondo animado (combina con Home/Nosotros) -->
+    <div class="bg-layer base"></div>
+    <div class="bg-layer glare"></div>
+    <div class="particles">
+      <span class="p p1"></span>
+      <span class="p p2"></span>
+      <span class="p p3"></span>
+      <span class="p p4"></span>
+      <span class="p p5"></span>
     </div>
 
-    <script>
-        async function iniciarSesion() {
-            // 1. Obtener valores
-            const usernameInput = document.getElementById('username').value;
-            const passwordInput = document.getElementById('password').value;
+    <div class="login-card" role="form" aria-labelledby="brandTitle">
+      <div class="brand">
+        <img src="./img/Circulo.png" alt="Logo Emplanorte" class="brand-logo" />
+        <h1 id="brandTitle" class="brand-title">EMPLANORTE</h1>
+      </div>
+      <p class="subtitle">Sistema de Gestión de Inventario</p>
 
-            // Validación simple
-            if (!usernameInput || !passwordInput) {
-                alert("Por favor ingrese usuario y contraseña");
-                return;
-            }
+      <form id="loginForm" novalidate>
+        <div class="input-group">
+          <i class="fas fa-user" aria-hidden="true"></i>
+          <input type="text" id="username" placeholder="Nombre de usuario" autocomplete="username" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+          <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Acceder al Sistema <i class="fas fa-arrow-right"></i>
+        </button>
+        <p class="go-home"><a href="/"><i class="fas fa-arrow-left"></i> Volver al Inicio</a></p>
+        <p id="formNote" class="form-note" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
 
-            // 2. Preparar datos para el Backend
-            const credenciales = {
-                username: usernameInput,
-                password: passwordInput
-            };
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('loginForm');
+  const note = document.getElementById('formNote');
+  const user = document.getElementById('username');
+  const pass = document.getElementById('password');
 
-            const boton = document.querySelector('.btn-login');
-            boton.innerText = "Verificando...";
-            boton.disabled = true;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-            try {
-                // 3. Enviar petición al Backend
-                const respuesta = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(credenciales)
-                });
+    // Validación básica
+    if (!user.value.trim() || !pass.value.trim()) {
+      if (note) note.textContent = 'Ingresa usuario y contraseña.';
+      return;
+    }
 
-                // 4. Verificar respuesta
-                if (respuesta.ok) {
-                    const usuario = await respuesta.json();
-                    
-                    // Guardar sesión en el navegador
-                    localStorage.setItem('usuarioSesion', JSON.stringify(usuario));
-                    
-                    // REDIRECCIONAR AL INVENTARIO
-                    window.location.href = '/inventario'; 
-                } else {
-                    alert('Error: Usuario o contraseña incorrectos');
-                    boton.innerText = "Iniciar Sesión";
-                    boton.disabled = false;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('No se pudo conectar con el servidor.');
-                boton.innerText = "Iniciar Sesión";
-                boton.disabled = false;
-            }
-        }
-    </script>
+    if (note) note.textContent = 'Ingresando…';
+
+    // Simulación login OK y redirección
+    setTimeout(() => {
+      window.location.href = '/inventario';  // ← aquí el archivo correcto
+    }, 250);
+  });
+});
+</script>
 
 </body>
 </html>

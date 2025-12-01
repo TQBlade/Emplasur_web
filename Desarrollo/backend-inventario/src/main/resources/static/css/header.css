@@ -1,234 +1,137 @@
 /* ========================================
-   HEADER STYLES - Sistema de Inventario
+   HEADER - Emplanorte (nav limpio sin íconos/pastillas)
    ======================================== */
-/* ESTADO POR DEFECTO (Transparente) */
-.main-header {
-    background: transparent;
-    padding: 1rem 0;
-    box-shadow: none;
-    transition: background-color 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
-    z-index: 1000;
+:root{
+  --emp-blue:  #0b2f6b;    /* azul logo */
+  --emp-blue2: #123a86;    /* azul acento */
+  --ui-green-1:#b5d66a;    /* verde pastel suave */
 }
 
-/* CLASE QUE AÑADE JAVASCRIPT CUANDO EL FONDO ES CLARO */
-.main-header.force-background {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    padding: 0.5rem 0;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+/* Base / transparente */
+.main-header{
+  position: fixed; inset: 0 0 auto 0; z-index: 1000;
+  background: transparent;
+  transition: background .35s ease, box-shadow .35s ease, padding .25s ease;
+  padding: .85rem 0;
+  border-bottom: 1px solid transparent;
+  will-change: background;
+}
+.header-content{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
 }
 
-/* --- El resto de tu CSS (logo, nav, etc.) queda exactamente igual --- */
-
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+/* Sólido al hacer scroll */
+.main-header.is-solid{
+  background:
+    radial-gradient(900px 380px at 85% -20%, rgba(255,255,255,.06), transparent 60%),
+    linear-gradient(180deg, var(--emp-blue), var(--emp-blue2));
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(6px);
+  padding: .55rem 0;
 }
 
-.logo-container a {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    transition: transform 0.3s ease;
+/* Logo */
+.logo-container a{ text-decoration:none; display:flex; align-items:center; gap:.55rem }
+.logo-img{ height:42px; width:auto; display:block; filter: drop-shadow(0 4px 10px rgba(0,0,0,.2)); transition: transform .2s ease }
+.logo-container a:hover .logo-img{ transform: scale(1.04) }
+.logo-text{
+  color:#fff; font-weight:900; letter-spacing:.02em;
+  text-shadow: 0 2px 8px rgba(0,0,0,.25);
+  font-size: clamp(18px, 1.6vw, 22px);
 }
 
-.logo-container a:hover {
-    transform: scale(1.05);
+/* NAV DESKTOP – limpio sin pastillas ni íconos */
+.main-nav{ flex:1 }
+.nav-list{ list-style:none; display:flex; gap:1.6rem; align-items:center; justify-content:center; margin:0; padding:0 }
+.nav-item{ position:relative }
+
+/* Ocultamos cualquier <i> si quedó en el HTML */
+.nav-link i{ display:none !important }
+
+.nav-link{
+  position:relative; display:inline-flex; align-items:center; gap:.45rem;
+  color:#e8eefc; text-decoration:none; font-weight:800; letter-spacing:.02em;
+  padding:.4rem .25rem; border-radius:0;        /* sin pastillas */
+  transition: color .2s ease, transform .18s ease;
+}
+.nav-link:hover{ color:#fff; transform: translateY(-1px) }
+
+/* subrayado degradado */
+.nav-link::after{
+  content:""; position:absolute; left:0; right:0; bottom:-6px; height:3px; width:0%;
+  margin-inline:auto;
+  background: linear-gradient(90deg, var(--ui-green-1), #ffffff);
+  border-radius:2px; transition: width .22s ease;
+}
+.nav-link:hover::after{ width:100% }
+.nav-link.active{ color:#fff }
+.nav-link.active::after{ width:100% }
+
+/* Botón entrar */
+.btn-header-login{
+  background: linear-gradient(90deg, var(--emp-blue), var(--emp-blue2));
+  color:#fff; text-decoration:none; font-weight:900;
+  padding:.7rem 1.1rem; border-radius:999px; border:none;
+  box-shadow: 0 10px 28px rgba(18,58,134,.35);
+  display:inline-flex; align-items:center; gap:.5rem;
+  transition: transform .18s ease, filter .18s ease;
+}
+.btn-header-login:hover{ transform: translateY(-2px); filter: brightness(1.05) }
+
+/* --- Mobile --- */
+.mobile-menu-toggle{ display:none; position:absolute; right:16px; top:50%; transform: translateY(-50%) }
+.mobile-menu-toggle .btn{
+  background: rgba(255,255,255,.12); color:#fff; border:none; padding:.55rem .8rem; border-radius:10px;
+}
+.mobile-menu{
+  display:none; position:absolute; left:0; right:0; top:100%;
+  background: linear-gradient(180deg, var(--emp-blue), var(--emp-blue2));
+  padding:.7rem .9rem; border-bottom-left-radius:14px; border-bottom-right-radius:14px;
+  box-shadow: 0 16px 36px rgba(0,0,0,.35); animation: slideDown .25s ease;
+}
+.mobile-menu.active{ display:block }
+.mobile-nav-list{ list-style:none; margin:0; padding:0 }
+.mobile-nav-list a{
+  display:block; padding:.85rem; border-radius:10px; color:#eef3ff; text-decoration:none; font-weight:800;
+}
+.mobile-nav-list a:hover{ background: rgba(255,255,255,.12) }
+
+@keyframes slideDown{ from{ opacity:0; transform: translateY(-8px)} to{ opacity:1; transform: translateY(0)} }
+
+@media (max-width: 991px){
+  .main-nav{ display:none }
+  .mobile-menu-toggle{ display:block }
+  .logo-img{ height:38px }
+  .btn-header-login span{ display:none }
+  .btn-header-login{ padding:.6rem .8rem }
+}
+/* ==== FIX: que el botón quede a la derecha y no baje de fila ==== */
+.header-content{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap: nowrap;             /* <- evita que el botón baje */
 }
 
-.logo-img {
-    height: 50px;
-    width: auto;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+.header-content > div{           /* columnas del header */
+  flex: 0 0 auto;                /* no crecen raramente */
 }
 
-.logo-text {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+.main-nav{                       /* deja de “estirarse” demasiado */
+  flex: 0 1 auto;
 }
 
-.main-nav {
-    flex-grow: 1;
+.col-login{
+  margin-left:auto;              /* empuja la columna del botón a la derecha */
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:.5rem;
 }
 
-.nav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 2rem;
-}
-
-.nav-item {
-    position: relative;
-}
-
-.nav-link {
-    color: #e0e0e0;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #00d4ff, #0099ff);
-    transform: translateX(-50%);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
-
-.nav-link:hover::before {
-    width: 80%;
-}
-
-.nav-link.active {
-    color: #00d4ff;
-    background: rgba(0, 212, 255, 0.1);
-}
-
-.btn-header-login {
-    background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
-    color: #ffffff;
-    padding: 0.7rem 1.5rem;
-    border-radius: 50px;
-    font-weight: 600;
-    text-decoration: none;
-    border: 2px solid transparent;
-    transition: all 0.4s ease;
-    box-shadow: 0 4px 15px rgba(0, 153, 255, 0.3);
-    display: inline-flex;
-    align-items: center;
-}
-
-.btn-header-login:hover {
-    background: linear-gradient(135deg, #0099ff 0%, #0066cc 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(0, 153, 255, 0.5);
-    color: #ffffff;
-}
-
-/* Mobile Menu Toggle */
-.mobile-menu-toggle {
-    display: none;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.mobile-menu-toggle .btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: #ffffff;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.mobile-menu-toggle .btn:hover {
-    background: rgba(0, 212, 255, 0.2);
-    transform: scale(1.1);
-}
-
-/* Mobile Menu */
-.mobile-menu {
-    display: none;
-    background: #16213e;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    padding: 1rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    animation: slideDown 0.3s ease;
-}
-
-.mobile-menu.active {
-    display: block;
-}
-
-.mobile-nav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.mobile-nav-list li {
-    margin-bottom: 0.5rem;
-}
-
-.mobile-nav-list a {
-    color: #e0e0e0;
-    text-decoration: none;
-    padding: 0.8rem 1rem;
-    display: block;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.mobile-nav-list a:hover {
-    background: rgba(0, 212, 255, 0.1);
-    color: #00d4ff;
-    transform: translateX(5px);
-}
-
-/* Animations */
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .main-nav {
-        display: none;
-    }
-    
-    .mobile-menu-toggle {
-        display: block;
-    }
-    
-    .logo-text {
-        font-size: 1.2rem;
-    }
-    
-    .logo-img {
-        height: 40px;
-    }
-    
-    .btn-header-login span {
-        display: none;
-    }
-    
-    .btn-header-login {
-        padding: 0.7rem 1rem;
-    }
+/* En móviles el botón y el toggle se ven bien */
+@media (max-width: 991px){
+  .col-login{ margin-left:0; }
 }

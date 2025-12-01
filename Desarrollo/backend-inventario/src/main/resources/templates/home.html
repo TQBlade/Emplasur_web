@@ -1,300 +1,272 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Emplanorte Sistema de Inventario</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- AOS Animation -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS - ORDEN IMPORTANTE -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inicio - Emplanorte Sistema de Inventario</title>
 
-    <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/footer.css">
-    <link rel="stylesheet" href="/css/home.css">
-    <link rel="stylesheet" href="/css/contactanos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="/js/components.js" defer></script>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- AOS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+  <!-- Estilos del sitio -->
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/footer.css">
+  <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
-    
-    <!-- HEADER SE CARGA AQUÍ AUTOMÁTICAMENTE -->
-    <div id="header-container" data-header-theme="light"></div>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main>
-        
-        <!-- Hero Section -->
-        <section class="hero-section" data-header-theme="light">
-            <div class="hero-overlay"></div>
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-7" data-aos="fade-right">
-                        <div class="hero-content">
-                            <h1 class="hero-title">
-                                <span class="title-highlight">SISTEMA DE GESTIÓN</span>
-                                <span class="title-main">DE INVENTARIO</span>
-                            </h1>
-                            <p class="hero-subtitle">Control total de tu operación en tiempo real</p>
-                            <p class="hero-description">
-                                Bienvenido al sistema de inventario de <strong>Emplanorte</strong>. Plataforma diseñada para optimizar la gestión de productos plásticos, permitiendo un control eficiente de stock, ventas y operaciones diarias. Accede a información actualizada y toma decisiones basadas en datos precisos.
-                            </p>
-                            <div class="hero-buttons">
-                                <a href="/login" class="btn btn-hero-primary">
-                                    <i class="fas fa-rocket me-2"></i>
-                                    Acceder al Sistema
-                                </a>
-                                <a href="#features" class="btn btn-hero-secondary">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    Más Información
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-5" data-aos="fade-left">
-                        <div class="hero-image">
-                            <div class="floating-card">
-                                <i class="fas fa-boxes"></i>
-                                <h3>Control Total</h3>
-                                <p>Gestión en tiempo real</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!-- HEADER (tu archivo existente) -->
+  <div id="header-container" data-header-theme="dark"></div>
+
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero-section" data-header-theme="dark">
+      <div class="container">
+        <div class="row align-items-center">
+          <!-- Columna izquierda: contenido ORIGINAL -->
+          <div class="col-lg-7" data-aos="fade-right">
+            <div class="hero-content">
+              <h1 class="hero-title">
+                <span class="title-highlight">SISTEMA DE GESTIÓN</span>
+                <span class="title-main">DE INVENTARIO</span>
+              </h1>
+              <p class="hero-subtitle">Control total de  operación en tiempo real</p>
+              <p class="hero-description">
+                Bienvenido al sistema de inventario de <strong>Emplanorte</strong>. Plataforma diseñada para optimizar la gestión de productos plásticos, permitiendo un control eficiente de stock, ventas y operaciones diarias.
+              <div class="hero-buttons">
+                <a href="/login" class="btn btn-hero-primary">
+                  <i class="fas fa-rocket me-2"></i> Acceder al Sistema
+                </a>
+                <a href="#features" class="btn btn-hero-secondary">
+                  <i class="fas fa-info-circle me-2"></i> Más Información
+                </a>
+              </div>
             </div>
-            
-            <div class="hero-shapes">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
+          </div>
+
+          <!-- Columna derecha: CÍRCULO rebotando (PNG sin fondo) -->
+          <div class="col-lg-5" data-aos="fade-left">
+            <div class="hero-visual">
+              <img src="img/Circulo.png" alt="Emplanorte" class="logo-bounce" />
             </div>
-        </section>
+          </div>
+        </div>
+      </div>
 
-        <!-- Stats Section -->
-        <section class="stats-section py-5" data-header-theme="light">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-boxes"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 class="stat-number" data-target="1500">0</h3>
-                                <p class="stat-label">Productos Gestionados</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 class="stat-number" data-target="98">0</h3>
-                                <p class="stat-label">% Precisión de Datos</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 class="stat-number" data-target="24">0</h3>
-                                <p class="stat-label">Horas de Disponibilidad</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <!-- Olas animadas -->
+      <div class="hero-waves" aria-hidden="true">
+        <div class="wave wave-1"></div>
+        <div class="wave wave-2"></div>
+        <div class="wave wave-3"></div>
+      </div>
+    </section>
+
+    <!-- ================= STATS ================= -->
+    <section class="stats-section py-5" data-header-theme="light">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="80">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+              <div class="stat-content">
+                <h3 class="stat-number" data-target="1500">0</h3>
+                <p class="stat-label">Productos Gestionados</p>
+              </div>
             </div>
-        </section>
-
-        <!-- Features Section -->
-        <section id="features" class="features-section py-5" data-header-theme="light">
-            <div class="container">
-                <div class="section-header text-center mb-5" data-aos="fade-up">
-                    <h2 class="section-title">Características Destacadas</h2>
-                    <p class="section-subtitle">Herramientas diseñadas para potenciar tu operación</p>
-                </div>
-                
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-box-open"></i>
-                            </div>
-                            <h3 class="feature-title">Control de Stock</h3>
-                            <p class="feature-description">
-                                Monitoreo en tiempo real de productos disponibles. Visualiza niveles de inventario, alertas de stock bajo y movimientos de productos al instante.
-                            </p>
-                            <ul class="feature-list">
-                                <li><i class="fas fa-check"></i> Actualización en tiempo real</li>
-                                <li><i class="fas fa-check"></i> Alertas automáticas</li>
-                                <li><i class="fas fa-check"></i> Trazabilidad completa</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-chart-bar"></i>
-                            </div>
-                            <h3 class="feature-title">Reportes Detallados</h3>
-                            <p class="feature-description">
-                                Análisis de ventas y movimientos de inventario. Genera reportes personalizados con gráficos interactivos y exporta datos en múltiples formatos.
-                            </p>
-                            <ul class="feature-list">
-                                <li><i class="fas fa-check"></i> Gráficos interactivos</li>
-                                <li><i class="fas fa-check"></i> Exportación flexible</li>
-                                <li><i class="fas fa-check"></i> Análisis predictivo</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-                        <div class="feature-card">
-                            <div class="feature-icon">
-                                <i class="fas fa-sync-alt"></i>
-                            </div>
-                            <h3 class="feature-title">Gestión Eficiente</h3>
-                            <p class="feature-description">
-                                Optimiza tus procesos de compra y distribución. Automatiza tareas repetitivas y mejora la coordinación entre equipos de trabajo.
-                            </p>
-                            <ul class="feature-list">
-                                <li><i class="fas fa-check"></i> Procesos automatizados</li>
-                                <li><i class="fas fa-check"></i> Coordinación en equipo</li>
-                                <li><i class="fas fa-check"></i> Optimización continua</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="160">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+              <div class="stat-content">
+                <h3 class="stat-number" data-target="98">0</h3>
+                <p class="stat-label">% Precisión de Datos</p>
+              </div>
             </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="cta-section py-5" data-header-theme="dark">
-            <div class="container">
-                <div class="cta-card" data-aos="fade-up">
-                    <div class="row align-items-center">
-                        <div class="col-lg-8">
-                            <h2 class="cta-title">¿Listo para optimizar tu inventario?</h2>
-                            <p class="cta-text">
-                                Únete a la transformación digital de Emplanorte y descubre cómo nuestro sistema puede revolucionar tu gestión de inventario.
-                            </p>
-                        </div>
-                        <div class="col-lg-4 text-lg-end text-center mt-4 mt-lg-0">
-                            <a href="/login" class="btn btn-cta">
-                                <i class="fas fa-sign-in-alt me-2"></i>
-                                Acceder Ahora
-                            </a>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="240">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-clock"></i></div>
+              <div class="stat-content">
+                <h3 class="stat-number" data-target="24">0</h3>
+                <p class="stat-label">Horas de Disponibilidad</p>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <!-- About Section -->
-        <section id="about" class="about-section py-5" data-header-theme="light">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
-                        <div class="about-image">
-                            <img src="assets/img/about-system.jpg" alt="Sistema de Inventario" class="img-fluid">
-                            <div class="about-badge">
-                                <i class="fas fa-award"></i>
-                                <span>Tecnología de Vanguardia</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6" data-aos="fade-left">
-                        <div class="about-content">
-                            <h2 class="about-title">El Plástico que Cobra Vida</h2>
-                            <p class="about-subtitle">Ahora con tecnología al servicio de tu negocio</p>
-                            <p class="about-text">
-                                En <strong>Emplanorte</strong> entendemos que la tecnología es clave para mantener nuestra competitividad. Este sistema refleja nuestro compromiso con la modernización de procesos y la excelencia en el servicio a nuestros clientes del Norte de Santander.
-                            </p>
-                            <div class="about-features">
-                                <div class="about-feature-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Acceso desde cualquier dispositivo</span>
-                                </div>
-                                <div class="about-feature-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Interfaz intuitiva y fácil de usar</span>
-                                </div>
-                                <div class="about-feature-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Soporte técnico especializado</span>
-                                </div>
-                                <div class="about-feature-item">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Actualizaciones constantes</span>
-                                </div>
-                            </div>
-                            <a href="/nosotros" class="btn btn-about-more mt-4">
-                                <i class="fas fa-arrow-right me-2"></i>
-                                Conocer Más
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    <!-- ================= FEATURES ================= -->
+    <section id="features" class="features-section py-5" data-header-theme="light">
+      <div class="container">
+        <div class="section-header text-center mb-5" data-aos="fade-up">
+          <h2 class="section-title">Características Destacadas</h2>
+          <p class="section-subtitle">Herramientas diseñadas para potenciar tu operación</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-box-open"></i></div>
+              <h3 class="feature-title">Control de Stock</h3>
+              <p class="feature-description">
+                Monitoreo en tiempo real de productos disponibles. Visualizar los niveles del inventario, alertas de stock bajo y movimientos de productos al instante.
+              </p>
+              <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Actualización en tiempo real</li>
+                <li><i class="fas fa-check"></i> Alertas automáticas</li>
+                <li><i class="fas fa-check"></i> Trazabilidad completa</li>
+              </ul>
             </div>
-        </section>
+          </div>
 
-    </main>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+              <h3 class="feature-title">Reportes Detallados</h3>
+              <p class="feature-description">
+                Análisis de ventas y movimientos del inventario. Genera reportes personalizados con gráficos interactivos y exporta datos en múltiples formatos.
+              </p>
+              <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Gráficos interactivos</li>
+                <li><i class="fas fa-check"></i> Exportación flexible</li>
+                <li><i class="fas fa-check"></i> Análisis predictivo</li>
+              </ul>
+            </div>
+          </div>
 
-    <!-- FOOTER SE CARGA AQUÍ AUTOMÁTICAMENTE -->
-    <div id="footer-container"></div>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-sync-alt"></i></div>
+              <h3 class="feature-title">Gestión Eficiente</h3>
+              <p class="feature-description">
+                Optimiza los procesos de compra y distribución. Automatiza tareas repetitivas y mejora la coordinación entre equipos de trabajo.
+              </p>
+              <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Procesos automatizados</li>
+                <li><i class="fas fa-check"></i> Coordinación en equipo</li>
+                <li><i class="fas fa-check"></i> Optimización continua</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <!-- Components JS (Header y Footer) -->
-    <script src="/js/components.js"></script>
-    
-    <script>
-        // Initialize AOS
-        AOS.init({ duration: 1000, once: true, offset: 100 });
-        
-        // Counter Animation
-        const animateCounter = (counter) => {
-            const target = +counter.getAttribute('data-target');
-            const increment = target / 200;
-            
-            const updateCount = () => {
-                const count = +counter.innerText;
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + increment);
-                    setTimeout(updateCount, 10);
-                } else {
-                    counter.innerText = target;
-                }
-            };
-            updateCount();
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const counter = entry.target.querySelector('.stat-number');
-                    if (counter && counter.innerText === '0') {
-                        animateCounter(counter);
-                    }
-                }
-            });
-        }, { threshold: 0.5 });
-        
-        document.querySelectorAll('.stat-card').forEach(card => observer.observe(card));
-    </script>
+    <!-- ================= CTA ================= -->
+    <section class="cta-section py-5" data-header-theme="dark">
+      <div class="container">
+        <div class="cta-card" data-aos="fade-up">
+          <div class="row align-items-center">
+            <div class="col-lg-8">
+              <h2 class="cta-title">INGRESA AL INVENTARIO DE EMPLANORTE AQUÍ</h2>
+              <p class="cta-text">
+                Accede a tu cuenta para comenzar a gestionar el inventario de manera eficiente y efectiva.
+              </p>
+            </div>
+            <div class="col-lg-4 text-lg-end text-center mt-4 mt-lg-0">
+              <a href="/login" class="btn btn-cta">
+                <i class="fas fa-sign-in-alt me-2"></i> Acceder Ahora
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT (IZQUIERDA, logo COMPLETO, sin recuadro, PARALLAX) ================= -->
+    <section id="about" class="about-section py-5" data-header-theme="light">
+      <div class="container">
+        <div class="row align-items-center">
+          <!-- LOGO COMPLETO PNG, sin tarjeta, con parallax -->
+          <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+            <div class="about-image">
+              <img src="img/Logo.png" alt="Logo Emplanorte" class="about-logo logo-parallax" data-speed="0.18">
+            </div>
+          </div>
+
+          <!-- Texto original -->
+          <div class="col-lg-6" data-aos="fade-left">
+            <div class="about-content">
+              <h2 class="about-title">El Plástico que Cobra Vida</h2>
+              <p class="about-subtitle">Ahora con tecnología de vanguardia</p>
+              <p class="about-text">
+                En <strong>Emplanorte</strong> entendemos que la tecnología es clave para mantener nuestra competitividad. Este sistema refleja nuestro compromiso con la modernización de procesos y la excelencia en el servicio.
+              </p>
+              <div class="about-features">
+                <div class="about-feature-item"><i class="fas fa-check-circle"></i><span>Acceso desde cualquier dispositivo</span></div>
+                <div class="about-feature-item"><i class="fas fa-check-circle"></i><span>Interfaz intuitiva y fácil de usar</span></div>
+                <div class="about-feature-item"><i class="fas fa-check-circle"></i><span>Soporte técnico especializado</span></div>
+                <div class="about-feature-item"><i class="fas fa-check-circle"></i><span>Actualizaciones constantes</span></div>
+              </div>
+              <a href="/nosotros" class="btn btn-about-more">
+                <i class="fas fa-arrow-right me-2"></i> Conocer Más
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (tu archivo existente) -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+  <script>
+    // Cargar header y footer
+    Promise.all([
+      fetch('header.html').then(r => r.text()).then(h => { document.getElementById('header-container').innerHTML = h; }),
+      fetch('footer.html').then(r => r.text()).then(f => { document.getElementById('footer-container').innerHTML = f; })
+    ]).then(() => {
+      // Activar link en nav
+      document.querySelectorAll('.main-header .nav-link').forEach(a => {
+        if ((a.getAttribute('href') || '').toLowerCase().includes('home')) a.classList.add('active');
+      });
+    });
+
+    // AOS
+    AOS.init({ duration: 900, once: true, offset: 100 });
+
+    // Contadores
+    const animateCounter = (el) => {
+      const t = +el.dataset.target; let n=0; const step=Math.max(1,Math.round(t/60));
+      const tick=()=>{ n+=step; if(n>=t){el.textContent=t; return;} el.textContent=n; requestAnimationFrame(tick); };
+      tick();
+    };
+    const io = new IntersectionObserver(es=>{
+      es.forEach(e=>{ if(e.isIntersecting){ const c=e.target.querySelector('.stat-number'); if(c && c.textContent==='0') animateCounter(c); } });
+    },{threshold:.6});
+    document.querySelectorAll('.stat-card').forEach(card=>io.observe(card));
+
+    // ===== Parallax suave para logos (About) =====
+    const $parallax = [...document.querySelectorAll('.logo-parallax')];
+    const lerp = (a,b,t)=>a+(b-a)*t;
+    const state = new Map();
+
+    const updateParallax = () => {
+      $parallax.forEach(el=>{
+        const sp = parseFloat(el.dataset.speed || '0.2');
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 800;
+        const f = ((rect.top + rect.height/2) - vh/2) / (vh/2); // -1..1
+        const targetY = -f * 30 * sp;
+        const s = state.get(el) || { y: 0 };
+        s.y = lerp(s.y, targetY, 0.08);
+        el.style.transform = `translateY(${s.y.toFixed(2)}px)`;
+        state.set(el,s);
+      });
+      requestAnimationFrame(updateParallax);
+    };
+    requestAnimationFrame(updateParallax);
+  </script>
 </body>
 </html>

@@ -1,12 +1,10 @@
 package com.emplasur.backend_inventario.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -17,25 +15,37 @@ public class Producto {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String codigo; 
+    private String codigo;
 
-    @Column(nullable = false)
     private String nombre;
-
-    @Column(nullable = false)
     private String categoria;
+    
+    private Double costo;  // Nuevo
+    @Column(name = "precio_unitario")
+    private Double precioUnitario; // Es el 'price' del JS
 
-    @Column(name = "stock_actual", nullable = false)
-    private Integer stockActual;
+    @Column(name = "unidades_sueltas")
+    private Integer unidadesSueltas; // looseUnits
 
-    @Column(name = "stock_minimo", nullable = false)
+    @Column(name = "stock_minimo")
     private Integer stockMinimo;
 
-    @Column(name = "precio_unitario", nullable = false)
-    private Double precioUnitario;
+    // Relación con los lotes (Pacas)
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Lote> lotes = new ArrayList<>();
 
-    private String estado; 
+    // Campo calculado (no se guarda en BD, pero se envía al JSON)
+    // Suma: (pacas * tamaño) + sueltas
+    public Integer getTotalUnidades() {
+        int totalPacas = lotes.stream().mapToInt(l -> l.getCantidadPacas() * l.getTamanoPaca()).sum();
+        return totalPacas + (unidadesSueltas != null ? unidadesSueltas : 0);
+    }
     
-    @Column(name = "imagen_url")
-    private String imagenUrl;
+    public String getEstado() {
+        int total = getTotalUnidades();
+        if (total == 0) return "Agotado";
+        if (total < stockMinimo) return "Stock Bajo";
+        return "En Stock";
+    }
 }

@@ -45,4 +45,12 @@ public class Venta {
     public void prePersist() {
         this.fecha = LocalDateTime.now();
     }
+
+    // ... dentro de la clase Venta existente ...
+    @Column(name = "costo_total")
+    private Double costoTotal;
+
+    private Double ganancia;
+    
+    private String detalle; // Descripción de qué se vendió
 }
