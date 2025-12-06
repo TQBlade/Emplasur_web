@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,11 +24,11 @@ public class Venta {
 
     private LocalDateTime fecha;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // <--- AGREGAR (fetch = FetchType.EAGER)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // <--- AGREGAR ESTO IMPORTANTE
     @JoinColumn(name = "cliente_id")
     private Cliente cliente; 
 
@@ -40,17 +41,16 @@ public class Venta {
 
     @Column(name = "total_venta", nullable = false)
     private Double totalVenta;
-
-    @PrePersist
-    public void prePersist() {
-        this.fecha = LocalDateTime.now();
-    }
-
-    // ... dentro de la clase Venta existente ...
+    
     @Column(name = "costo_total")
     private Double costoTotal;
 
     private Double ganancia;
     
-    private String detalle; // Descripción de qué se vendió
+    private String detalle;
+
+    @PrePersist
+    public void prePersist() {
+        this.fecha = LocalDateTime.now();
+    }
 }

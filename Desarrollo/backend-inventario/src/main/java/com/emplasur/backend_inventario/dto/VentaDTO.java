@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class VentaDTO {
     private Long productoId;
-    private Long usuarioId; // El empleado que registra la venta
-    private Long clienteId; // Opcional (puede ser null)
+    private Long usuarioId;
     private Integer cantidad;
+    private Long clienteId; // <--- ¡VERIFICA QUE ESTE CAMPO EXISTA!
+    private Double precioVenta;
 }

@@ -7,14 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.emplasur.backend_inventario.dto.VentaDTO;
+import com.emplasur.backend_inventario.entity.Cliente;
 import com.emplasur.backend_inventario.entity.Lote;
 import com.emplasur.backend_inventario.entity.Producto;
 import com.emplasur.backend_inventario.entity.Venta;
+import com.emplasur.backend_inventario.repository.ClienteRepository;
 import com.emplasur.backend_inventario.repository.ProductoRepository;
 import com.emplasur.backend_inventario.repository.UsuarioRepository;
 import com.emplasur.backend_inventario.repository.VentaRepository;
 
-import jakarta.transaction.Transactional; // ¡Importante para consistencia de datos!
+import jakarta.transaction.Transactional;
 
 @Service
 public class VentaService {
@@ -27,38 +29,34 @@ public class VentaService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private ClienteRepository clienteRepository; // Asegúrate de tener esto
 
-
-    // LÓGICA CORE: Registrar venta y descontar stock
     @Transactional
     public Venta registrarVenta(VentaDTO ventaDTO) {
         // 1. Buscar Producto
         Producto producto = productoRepository.findById(ventaDTO.getProductoId())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         
-        // 2. Validar Stock Total
+        // 2. Validar Stock
         if (producto.getTotalUnidades() < ventaDTO.getCantidad()) {
             throw new RuntimeException("Stock insuficiente");
         }
 
-        // 3. LOGICA FIFO (Replica exacta de tu JS)
+        // 3. FIFO (Descontar inventario)
         int restante = ventaDTO.getCantidad();
-        
-        // A. Primero tomar unidades sueltas
         int tomarSueltas = Math.min(restante, producto.getUnidadesSueltas());
         producto.setUnidadesSueltas(producto.getUnidadesSueltas() - tomarSueltas);
         restante -= tomarSueltas;
 
-        // B. Si falta, romper pacas
         if (restante > 0) {
             for (Lote lote : producto.getLotes()) {
                 while (restante > 0 && lote.getCantidadPacas() > 0) {
                     if (restante >= lote.getTamanoPaca()) {
-                        // Consumir paca entera
                         lote.setCantidadPacas(lote.getCantidadPacas() - 1);
                         restante -= lote.getTamanoPaca();
                     } else {
-                        // Romper paca y pasar sobrante a sueltas
                         lote.setCantidadPacas(lote.getCantidadPacas() - 1);
                         int sobrante = lote.getTamanoPaca() - restante;
                         producto.setUnidadesSueltas(producto.getUnidadesSueltas() + sobrante);
@@ -69,34 +67,39 @@ public class VentaService {
             }
         }
         
-        // Eliminar lotes vacíos (packs = 0)
         producto.getLotes().removeIf(l -> l.getCantidadPacas() <= 0);
         productoRepository.save(producto);
 
-        // 4. Registrar Venta con datos financieros
+        // 4. Crear Venta
         Venta venta = new Venta();
         venta.setProducto(producto);
         venta.setUsuario(usuarioRepository.findById(ventaDTO.getUsuarioId()).orElse(null));
         venta.setCantidad(ventaDTO.getCantidad());
-        venta.setTotalVenta(producto.getPrecioUnitario() * ventaDTO.getCantidad());
         
-        // Cálculos financieros
-        double costoTotal = producto.getCosto() * ventaDTO.getCantidad();
-        venta.setCostoTotal(costoTotal);
-        venta.setGanancia(venta.getTotalVenta() - costoTotal);
+        // CORRECCIÓN: Usar precio personalizado si viene del formulario, sino usar el del producto
+        double precioFinal;
+        if (ventaDTO.getPrecioVenta() != null && ventaDTO.getPrecioVenta() > 0) {
+            precioFinal = ventaDTO.getPrecioVenta();
+        } else {
+            precioFinal = producto.getPrecioUnitario();
+        }
         
-        // Cliente y detalle (que ahora vienen en el DTO)
-        // ... setear cliente y detalle ...
+        venta.setTotalVenta(precioFinal * ventaDTO.getCantidad());
         
+        // ===================================================================
+        // 5. ASIGNAR CLIENTE (¡ESTO ERA LO QUE FALTABA!)
+        // ===================================================================
+        if (ventaDTO.getClienteId() != null) {
+            Cliente cliente = clienteRepository.findById(ventaDTO.getClienteId()).orElse(null);
+            venta.setCliente(cliente);
+        }
+        // ===================================================================
 
         return ventaRepository.save(venta);
     }
 
-    // Listar ventas por rango de fechas
     public List<Venta> listarVentasPorFecha(LocalDateTime inicio, LocalDateTime fin) {
-        if (inicio == null || fin == null) {
-            return ventaRepository.findAll();
-        }
+        if (inicio == null || fin == null) return ventaRepository.findAll();
         return ventaRepository.findByFechaBetween(inicio, fin);
     }
 

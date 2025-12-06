@@ -33,12 +33,10 @@ public class ClienteController {
 
     // Buscar por documento (Para el formulario de ventas)
    // Buscar por documento (Coincidencias parciales)
-    @GetMapping("/buscar/{documento}")
+   @GetMapping("/buscar/{documento}")
     public ResponseEntity<List<Cliente>> buscarPorDocumento(@PathVariable String documento) {
         List<Cliente> clientes = clienteRepository.findByDocumentoContaining(documento);
-        if (clientes.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        // NO devolvemos 404, devolvemos OK con lista vacía si no hay resultados
         return ResponseEntity.ok(clientes);
     }
 

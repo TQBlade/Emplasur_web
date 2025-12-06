@@ -1,10 +1,9 @@
-// ================== VENTAS (CORREGIDO: MANEJO DE LISTAS EN BÚSQUEDA) ==================
+// ================== VENTAS (CORREGIDO: ASOCIACIÓN DE CLIENTE NUEVO) ==================
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('saleForm');
   const selProduct = document.getElementById('saleProduct');
   
-  // Elementos de UI
   const btnTabForm = document.getElementById('btnTabSaleForm');
   const btnTabHist = document.getElementById('btnTabSaleHistory');
   const secForm    = document.getElementById('saleFormSection');
@@ -15,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!form) return;
 
-  // --- LÓGICA VISUAL ---
+  // --- UI ---
   function showSectionHoy() {
     if (secForm && secHist) {
       secForm.style.display = 'block';
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', closeSaleModal);
   });
 
-  // Toggle Modo Venta
   const saleModeButtons = document.getElementById('saleMode');
   const boxUnit  = document.getElementById('saleUnitsBox');
   const boxPack  = document.getElementById('salePacksBox');
@@ -71,10 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // =========================================================
-  // 2. GESTIÓN DE CLIENTES (CORRECCIÓN AQUÍ)
-  // =========================================================
-  const btnSearchClient = document.getElementById('btnSearchClient');
+  // --- CLIENTES ---
   const inputDoc = document.getElementById('saleClientDoc');
   const infoBox = document.getElementById('clientInfoBox');
   const foundMsg = document.getElementById('foundClientMsg');
@@ -85,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!resultsList && inputDoc) {
       resultsList = document.createElement('div');
       resultsList.id = 'clientSearchResults';
-      resultsList.style.cssText = "position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:1000; display:none; border-radius: 0 0 5px 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: #333;"; // Agregué color negro para asegurar visibilidad
+      resultsList.style.cssText = "position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:1000; display:none; border-radius: 0 0 5px 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: #333;"; 
       inputDoc.parentNode.style.position = 'relative'; 
       inputDoc.parentNode.appendChild(resultsList);
   }
@@ -99,63 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if(resultsList) resultsList.style.display = 'none';
   }
 
-  // --- BOTÓN DE LUPA (CORREGIDO PARA LEER LISTAS) ---
-  if(btnSearchClient) {
-      btnSearchClient.addEventListener('click', async () => {
-          const doc = inputDoc.value.trim();
-          if(!doc) { alert('Ingrese un documento'); return; }
-
-          try {
-              const res = await fetch(`/api/clientes/buscar/${doc}`);
-              infoBox.style.display = 'block';
-              
-              if(res.ok) {
-                  // CORRECCIÓN: El backend devuelve una LISTA (Array), no un objeto único
-                  const listaClientes = await res.json();
-                  
-                  if (listaClientes.length > 0) {
-                      // Tomamos el primer resultado de la lista
-                      const c = listaClientes[0];
-                      selectClient(c); // Reusamos la función de seleccionar
-                  } else {
-                      // Lista vacía (caso raro si res.ok, pero posible)
-                      mostrarFormularioNuevo();
-                  }
-              } else {
-                  // 404 No encontrado
-                  mostrarFormularioNuevo();
-              }
-          } catch(err) { console.error(err); }
-      });
-  }
-
-  function mostrarFormularioNuevo() {
-      if(resultsList) resultsList.style.display = 'none';
-      selectedClientId.value = ''; 
-      infoBox.style.display = 'block';
-      foundMsg.style.display = 'none';
-      newClientForm.style.display = 'block';
-      
-      // Limpiar campos
-      document.getElementById('nc_name1').value = '';
-      document.getElementById('nc_name2').value = '';
-      document.getElementById('nc_last1').value = '';
-      document.getElementById('nc_last2').value = '';
-      document.getElementById('nc_tel').value = '';
-      document.getElementById('nc_email').value = '';
-  }
-
-  // --- BÚSQUEDA MIENTRAS ESCRIBES ---
   let debounceTimer;
   if(inputDoc) {
       inputDoc.addEventListener('input', (e) => {
           clearTimeout(debounceTimer);
           const term = e.target.value.trim();
-          
-          if(term.length === 0) {
-              resetClientSection();
-              return;
-          }
+          if(term.length === 0) { resetClientSection(); return; }
           debounceTimer = setTimeout(() => searchClients(term), 300);
       });
   }
@@ -163,33 +107,47 @@ document.addEventListener('DOMContentLoaded', () => {
   async function searchClients(term) {
       try {
           const res = await fetch(`/api/clientes/buscar/${term}`);
+          
           if(res.ok) {
               const clientes = await res.json();
-              showSearchResults(clientes);
-          } else {
-              // Si no encuentra nada mientras escribes, no hacemos nada intrusivo aún
-              if(resultsList) resultsList.style.display = 'none';
+              
+              // Si la lista tiene datos, mostramos resultados
+              if (clientes.length > 0) {
+                  showSearchResults(clientes);
+              } else {
+                  // Si la lista está vacía, mostramos formulario de nuevo cliente
+                  if(resultsList) resultsList.style.display = 'none';
+                  mostrarFormularioNuevo();
+              }
           }
       } catch(err) { console.error(err); }
+  }
+
+  function mostrarFormularioNuevo() {
+      selectedClientId.value = ''; 
+      infoBox.style.display = 'block';
+      foundMsg.style.display = 'none';
+      newClientForm.style.display = 'block';
+      
+      document.getElementById('nc_name1').value = '';
+      document.getElementById('nc_last1').value = '';
   }
 
   function showSearchResults(clientes) {
       resultsList.innerHTML = '';
       resultsList.style.display = 'block';
-      infoBox.style.display = 'none'; // Ocultamos el cuadro de "No encontrado" si estábamos ahí
+      infoBox.style.display = 'none'; 
 
       clientes.forEach(c => {
           const div = document.createElement('div');
           div.style.padding = '10px';
           div.style.cursor = 'pointer';
           div.style.borderBottom = '1px solid #eee';
-          
           div.onmouseover = () => div.style.backgroundColor = '#f0f4f8';
           div.onmouseout = () => div.style.backgroundColor = 'white';
           
-          // Renderizar info
-          div.innerHTML = `<strong>${c.documento}</strong> - ${c.primerNombre} ${c.primerApellido}`;
-          
+          const nombre = `${c.primerNombre} ${c.primerApellido}`;
+          div.innerHTML = `<strong>${c.documento}</strong> - ${nombre}`;
           div.onclick = () => selectClient(c);
           resultsList.appendChild(div);
       });
@@ -198,267 +156,238 @@ document.addEventListener('DOMContentLoaded', () => {
   function selectClient(c) {
       inputDoc.value = c.documento;
       selectedClientId.value = c.id; 
-      
       if(resultsList) resultsList.style.display = 'none';
       infoBox.style.display = 'block';
-      
       const nombre = `${c.primerNombre} ${c.primerApellido}`;
       document.getElementById('foundClientName').textContent = nombre;
-      
       foundMsg.style.display = 'block';
       newClientForm.style.display = 'none';
   }
 
-  // =========================================================
-  // 3. CARGAR PRODUCTOS Y CÁLCULOS
-  // =========================================================
+  const btnSearch = document.getElementById('btnSearchClient');
+  if(btnSearch) {
+      btnSearch.addEventListener('click', () => {
+          const doc = inputDoc.value.trim();
+          if(doc) searchClients(doc);
+      });
+  }
 
+  // --- PRODUCTOS ---
   async function loadProductsInSaleSelect() {
     try {
       const res = await fetch('/api/productos');
-      if(!res.ok) throw new Error("Error al traer productos");
-      
+      if(!res.ok) throw new Error("Error API");
       productsCache = await res.json();
-      
-      selProduct.innerHTML = '<option value="">-- Seleccione un producto --</option>';
-      
+      selProduct.innerHTML = '<option value="">-- Seleccione --</option>';
       productsCache.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.id; 
         opt.textContent = `${p.codigo} — ${p.nombre} (Stock: ${p.totalUnidades})`;
         selProduct.appendChild(opt);
       });
-    } catch (err) {
-      console.error("Error cargando productos:", err);
-    }
+    } catch (err) { console.error(err); }
   }
 
   function getSelectedProduct() {
-    const id = Number(selProduct.value);
-    return productsCache.find(p => p.id === id);
+    return productsCache.find(p => p.id == selProduct.value);
   }
 
   function loadPackSizesForSelected() {
     const p = getSelectedProduct();
     const s1 = document.getElementById('salePackSize');
     const s2 = document.getElementById('salePackSizeMixed');
-    
-    if (!p || !p.lotes || p.lotes.length === 0) {
-      const html = '<option value="">Sin pacas</option>';
-      if(s1) s1.innerHTML = html;
-      if(s2) s2.innerHTML = html;
-      return;
-    }
-
-    const sizes = [...new Set(p.lotes.map(l => l.tamanoPaca))];
-    const html = sizes.map(s => `<option value="${s}">${s}</option>`).join('');
-    
+    const html = (p && p.lotes.length) 
+        ? [...new Set(p.lotes.map(l => l.tamanoPaca))].map(s => `<option value="${s}">${s}</option>`).join('')
+        : '<option value="">Sin pacas</option>';
     if(s1) s1.innerHTML = html;
     if(s2) s2.innerHTML = html;
   }
 
-  function syncPriceFromProduct() {
+  function syncPrice() {
     const p = getSelectedProduct();
-    const inputPrice = document.getElementById('salePrice');
-    if (p && inputPrice) inputPrice.value = p.precioUnitario || 0;
+    const input = document.getElementById('salePrice');
+    if (p && input) input.value = p.precioUnitario || 0;
   }
 
   if(selProduct) {
       selProduct.addEventListener('change', () => {
         loadPackSizesForSelected();
-        syncPriceFromProduct();
+        syncPrice();
       });
   }
 
   // =========================================================
-  // 4. ENVIAR VENTA (POST)
+  // 4. ENVIAR VENTA (POST) - ¡CORREGIDO!
   // =========================================================
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const p = getSelectedProduct();
     if (!p) { alert('Seleccione un producto'); return; }
 
-    // Calcular cantidad
-    const modeBtn = document.querySelector('#saleMode .active');
-    const mode = modeBtn ? modeBtn.dataset.mode : 'unit';
-    let unitsSold = 0;
+    const mode = document.querySelector('#saleMode .active')?.dataset.mode || 'unit';
+    let units = 0;
 
     if (mode === 'unit') {
-      unitsSold = Math.max(1, Number(document.getElementById('saleUnits').value || 0));
+      units = Number(document.getElementById('saleUnits').value);
     } else if (mode === 'pack') {
-      const size = Number(document.getElementById('salePackSize').value || 0);
-      const qty  = Math.max(1, Number(document.getElementById('salePackQty').value || 0));
-      if (!size) { alert('Seleccione tamaño de paca'); return; }
-      unitsSold = size * qty;
-    } else { // Mixto
-      const size = Number(document.getElementById('salePackSizeMixed').value || 0);
-      const qty  = Math.max(0, Number(document.getElementById('salePackQtyMixed').value || 0));
-      const u    = Math.max(0, Number(document.getElementById('saleUnitsMixed').value || 0));
-      if (!size && qty > 0) { alert('Seleccione tamaño de paca'); return; }
-      unitsSold = (size * qty) + u;
+      const s = Number(document.getElementById('salePackSize').value);
+      const q = Number(document.getElementById('salePackQty').value);
+      units = s * q;
+    } else { 
+      const s = Number(document.getElementById('salePackSizeMixed').value);
+      const q = Number(document.getElementById('salePackQtyMixed').value);
+      const u = Number(document.getElementById('saleUnitsMixed').value);
+      units = (s * q) + u;
     }
 
-    if (unitsSold <= 0) { alert('La cantidad debe ser mayor a 0'); return; }
+    if (units <= 0) { alert('Cantidad inválida'); return; }
 
-    // GESTIÓN DEL CLIENTE FINAL (Nuevo o Existente)
-    let clienteFinalId = selectedClientId.value; 
+    // --- MANEJO DE CLIENTE ---
+    let idCliente = selectedClientId.value;
 
-    // Si NO hay ID seleccionado pero el formulario de NUEVO cliente está visible
-    if (!clienteFinalId && newClientForm.style.display === 'block') {
+    // Si es nuevo (formulario visible y sin ID)
+    if (!idCliente && newClientForm.style.display === 'block') {
         const doc = inputDoc.value.trim();
         const n1 = document.getElementById('nc_name1').value.trim();
         const l1 = document.getElementById('nc_last1').value.trim();
         
-        if(!doc || !n1 || !l1) {
-            alert('Para clientes nuevos: Documento, 1er Nombre y 1er Apellido son obligatorios');
-            return;
-        }
-
-        const newClientData = {
-            documento: doc,
-            primerNombre: n1,
-            segundoNombre: document.getElementById('nc_name2').value.trim(),
-            primerApellido: l1,
-            segundoApellido: document.getElementById('nc_last2').value.trim(),
-            telefono: document.getElementById('nc_tel').value.trim(),
-            email: document.getElementById('nc_email').value.trim(),
-            direccion: "No especificada" 
-        };
+        if(!doc || !n1 || !l1) { alert('Datos incompletos para nuevo cliente'); return; }
 
         try {
+            // 1. CREAR CLIENTE
             const resCli = await fetch('/api/clientes', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(newClientData)
+                body: JSON.stringify({
+                    documento: doc,
+                    primerNombre: n1,
+                    segundoNombre: document.getElementById('nc_name2').value,
+                    primerApellido: l1,
+                    segundoApellido: document.getElementById('nc_last2').value,
+                    telefono: document.getElementById('nc_tel').value,
+                    email: document.getElementById('nc_email').value,
+                    direccion: "Local"
+                })
             });
+            if(!resCli.ok) throw new Error(await resCli.text());
             
-            if(resCli.ok) {
-                const savedCli = await resCli.json();
-                clienteFinalId = savedCli.id; 
-            } else {
-                const errMsg = await resCli.text();
-                alert('Error al registrar cliente: ' + errMsg);
-                return; 
-            }
+            // 2. RECIBIR EL NUEVO CLIENTE (INCLUYENDO SU ID)
+            const nuevo = await resCli.json();
+            idCliente = nuevo.id; // <--- AQUÍ CAPTURAMOS EL ID DEL NUEVO
+            
+            console.log("Cliente nuevo creado con ID:", idCliente); // Debug
         } catch(err) { 
-            console.error(err);
-            alert('Error de conexión al crear cliente');
-            return; 
+            alert('Error creando cliente: ' + err.message); 
+            return; // Detener venta si falló el cliente
         }
     }
 
-    // Preparar DTO de Venta
-    const usuarioSesion = JSON.parse(localStorage.getItem('usuarioSesion'));
-    const idCliParaEnviar = (clienteFinalId && clienteFinalId !== "") ? Number(clienteFinalId) : null;
-
-    const ventaDTO = {
-        productoId: p.id,
-        usuarioId: usuarioSesion ? usuarioSesion.id : 1, 
-        cantidad: unitsSold,
-        clienteId: idCliParaEnviar
-    };
-
     // Enviar Venta
+    const usuario = JSON.parse(localStorage.getItem('usuarioSesion'));
     try {
         const res = await fetch('/api/ventas', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(ventaDTO)
+            body: JSON.stringify({
+                productoId: p.id,
+                usuarioId: usuario ? usuario.id : 1,
+                cantidad: units,
+                clienteId: idCliente ? Number(idCliente) : null // ENVIAMOS EL ID CONFIRMADO
+            })
         });
 
         if (res.ok) {
-            alert('Venta registrada con éxito');
+            alert('¡Venta Exitosa!');
             closeSaleModal();
             renderSalesToday();
             if(window.renderInventory) window.renderInventory();
-            if(window.refreshAll) window.refreshAll();
+            if(window.refreshAll) window.refreshAll(); 
         } else {
-            const msg = await res.text();
-            alert('Error: ' + msg); 
+            alert('Error: ' + await res.text());
         }
-    } catch (err) {
-        console.error(err);
-        alert('Error de conexión');
-    }
+    } catch (err) { alert('Error de conexión'); }
   });
 
-  // =========================================================
-  // 5. HISTORIAL DE VENTAS
-  // =========================================================
-  window.renderSales = function() { renderSalesToday(); };
+  // --- RENDERS ---
+  window.renderSales = () => renderSalesToday();
 
   async function renderSalesToday() {
-    const hoy = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    // Construir fecha local YYYY-MM-DD
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hoy = `${year}-${month}-${day}`;
+    
+    // Llamar al backend con el filtro de hoy
     await renderSalesHistory({ desde: hoy, hasta: hoy }, 'salesTodayBody');
   }
 
   async function renderSalesHistory(filtro = null, tableId = 'salesHistoryBody') {
     const tbody = document.getElementById(tableId);
     if (!tbody) return;
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">Cargando...</td></tr>';
-
+    
     let url = '/api/ventas';
-    if (filtro) {
-        url += `?desde=${filtro.desde}&hasta=${filtro.hasta}`;
-    }
+    if(filtro) url += `?desde=${filtro.desde}&hasta=${filtro.hasta}`;
 
     try {
         const res = await fetch(url);
-        if(!res.ok) throw new Error("Error al obtener ventas");
-        
         const ventas = await res.json();
         tbody.innerHTML = '';
 
-        if(ventas.length === 0) {
-             tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">No hay ventas registradas</td></tr>';
-             return;
+        if(!ventas.length) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center">Sin datos</td></tr>';
+            return;
         }
 
-        let sumTotal = 0, sumCost = 0, sumProfit = 0;
+        let tVenta=0, tCosto=0, tGanancia=0;
 
-        ventas.forEach(s => {
-            sumTotal += s.totalVenta || 0;
-            sumCost += s.costoTotal || 0;
-            sumProfit += s.ganancia || 0;
-
-            let nombreCliente = 'General';
-            if (s.cliente) {
-                nombreCliente = `${s.cliente.primerNombre} ${s.cliente.primerApellido}`;
+        ventas.forEach(v => {
+            tVenta += v.totalVenta;
+            tCosto += v.costoTotal || 0;
+            tGanancia += v.ganancia || 0;
+            
+            let cliName = 'General';
+            if (v.cliente) {
+                cliName = `${v.cliente.primerNombre} ${v.cliente.primerApellido}`;
+            } else if (v.clienteId) { 
+                cliName = 'ID: ' + v.clienteId;
             }
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${new Date(s.fecha).toLocaleString()}</td>
-                <td>${s.producto ? s.producto.nombre : 'Producto eliminado'}</td>
-                <td>${s.cantidad} un.</td>
-                <td>${money(s.totalVenta)}</td>
-                <td>${money(s.costoTotal)}</td>
-                <td>${money(s.ganancia)}</td>
-                <td>${nombreCliente}</td>
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td>${new Date(v.fecha).toLocaleString()}</td>
+                    <td>${v.producto?.nombre || 'Eliminado'}</td>
+                    <td>${v.cantidad} un.</td>
+                    <td>${v.cantidad}</td>
+                    <td>${money(v.totalVenta)}</td>
+                    <td>${money(v.costoTotal)}</td>
+                    <td>${money(v.ganancia)}</td>
+                    <td>${cliName}</td>
+                </tr>
             `;
-            tbody.appendChild(tr);
         });
 
-        if (tableId === 'salesTodayBody') {
-            updateSummary('sumVentasDia', 'sumCostoDia', 'sumGananciaDia', sumTotal, sumCost, sumProfit);
+        if(tableId === 'salesTodayBody') {
+             updateSum('sumVentasDia', tVenta);
+             updateSum('sumCostoDia', tCosto);
+             updateSum('sumGananciaDia', tGanancia);
         } else {
-            updateSummary('t_total', 't_costo', 't_ganancia', sumTotal, sumCost, sumProfit);
+             updateSum('t_total', tVenta);
+             updateSum('t_costo', tCosto);
+             updateSum('t_ganancia', tGanancia);
         }
 
-    } catch (err) {
-        console.error(err);
-        tbody.innerHTML = '<tr><td colspan="8" style="color:red; text-align:center">Error de conexión</td></tr>';
-    }
+    } catch(e) { console.error(e); }
   }
 
-  function updateSummary(idTotal, idCosto, idGanancia, vTotal, vCosto, vGanancia) {
-      const elTotal = document.getElementById(idTotal);
-      const elCosto = document.getElementById(idCosto);
-      const elGanancia = document.getElementById(idGanancia);
-      
-      if(elTotal) elTotal.textContent = money(vTotal);
-      if(elCosto) elCosto.textContent = money(vCosto);
-      if(elGanancia) elGanancia.textContent = money(vGanancia);
+  function updateSum(id, val) {
+      const el = document.getElementById(id);
+      if(el) el.textContent = money(val);
+  }
+
+  function money(v) { 
+      return '$' + (v||0).toLocaleString('es-CO', {maximumFractionDigits:0}); 
   }
 
   const btnFiltrar = document.getElementById('btnFiltrarVentas');
@@ -466,18 +395,10 @@ document.addEventListener('DOMContentLoaded', () => {
       btnFiltrar.addEventListener('click', () => {
         const desde = document.getElementById('f_desde').value;
         const hasta = document.getElementById('f_hasta').value;
-        
-        if (!desde || !hasta) { alert('Seleccione ambas fechas'); return; }
+        if (!desde || !hasta) { alert('Seleccione fechas'); return; }
         renderSalesHistory({ desde, hasta }, 'salesHistoryBody');
       });
   }
 
-  function money(val) {
-      return '$' + (val || 0).toLocaleString('es-CO', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-      });
-  }
-  
   renderSalesToday();
 });

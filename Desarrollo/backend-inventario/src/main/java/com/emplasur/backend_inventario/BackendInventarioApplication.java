@@ -1,7 +1,11 @@
 package com.emplasur.backend_inventario;
 
+import java.util.TimeZone;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication
 public class BackendInventarioApplication {
@@ -10,4 +14,11 @@ public class BackendInventarioApplication {
 		SpringApplication.run(BackendInventarioApplication.class, args);
 	}
 
+	@PostConstruct
+    public void init(){
+        // Configurar la zona horaria por defecto a Colombia
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Bogota"));
+    }
+
 }
+

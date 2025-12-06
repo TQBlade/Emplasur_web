@@ -1,6 +1,7 @@
 package com.emplasur.backend_inventario.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,20 +40,28 @@ public class VentaController {
     }
 
     // GET: Ver historial
+    /**
+     * @param desde
+     * @param hasta
+     * @return
+     */
     @GetMapping
     public List<Venta> listar(
             @RequestParam(required = false) String desde,
             @RequestParam(required = false) String hasta
     ) {
         if (desde != null && hasta != null) {
-            // Convertir String "yyyy-MM-dd" a fechas completas
-            LocalDate d = LocalDate.parse(desde);
-            LocalDate h = LocalDate.parse(hasta);
-            return ventaService.listarVentasPorFecha(
-                    d.atStartOfDay(), 
-                    h.atTime(23, 59, 59)
-            );
+            // Parsear fechas (yyyy-MM-dd)
+            LocalDate fechaDesde = LocalDate.parse(desde);
+            LocalDate fechaHasta = LocalDate.parse(hasta);
+
+            // Crear rango: Desde el inicio del día 1 (00:00:00) hasta el final del día 2 (23:59:59)
+            LocalDateTime inicio = fechaDesde.atStartOfDay();
+            LocalDateTime fin = fechaHasta.atTime(23, 59, 59, 999999999);
+
+            return ventaService.listarVentasPorFecha(inicio, fin);
         }
+        // Si no hay filtro, devolver 
         return ventaService.listarVentas();
     }
 }
