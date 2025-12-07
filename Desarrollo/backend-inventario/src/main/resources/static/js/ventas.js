@@ -1,20 +1,24 @@
-// ================== VENTAS (CORREGIDO: ASOCIACIÓN DE CLIENTE NUEVO) ==================
+// ================== VENTAS (VERSIÓN FINAL CON PDF Y BÚSQUEDA) ==================
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('saleForm');
   const selProduct = document.getElementById('saleProduct');
   
+  // UI Elements
   const btnTabForm = document.getElementById('btnTabSaleForm');
   const btnTabHist = document.getElementById('btnTabSaleHistory');
   const secForm    = document.getElementById('saleFormSection');
   const secHist    = document.getElementById('saleHistorySection');
   const saleModal  = document.getElementById('saleModal');
 
+  // Cache y Variables Globales
   let productsCache = [];
+  let currentClientId = null; 
+  let currentSalesList = []; // Vital para el PDF
 
   if (!form) return;
 
-  // --- UI ---
+  // --- UI FUNCTIONS ---
   function showSectionHoy() {
     if (secForm && secHist) {
       secForm.style.display = 'block';
@@ -51,43 +55,44 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', closeSaleModal);
   });
 
+  // Toggle Mode
   const saleModeButtons = document.getElementById('saleMode');
-  const boxUnit  = document.getElementById('saleUnitsBox');
-  const boxPack  = document.getElementById('salePacksBox');
-  const boxMixed = document.getElementById('saleMixedBox');
-
   if (saleModeButtons) {
     saleModeButtons.addEventListener('click', e => {
       const btn = e.target.closest('button'); if (!btn) return;
       saleModeButtons.querySelectorAll('button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
       const mode = btn.dataset.mode;
-      if(boxUnit) boxUnit.style.display  = mode === 'unit'  ? 'block' : 'none';
-      if(boxPack) boxPack.style.display  = mode === 'pack'  ? 'block' : 'none';
-      if(boxMixed) boxMixed.style.display = mode === 'mixed' ? 'block' : 'none';
+      const uBox = document.getElementById('saleUnitsBox');
+      const pBox = document.getElementById('salePacksBox');
+      const mBox = document.getElementById('saleMixedBox');
+      if(uBox) uBox.style.display  = mode === 'unit'  ? 'block' : 'none';
+      if(pBox) pBox.style.display  = mode === 'pack'  ? 'block' : 'none';
+      if(mBox) mBox.style.display = mode === 'mixed' ? 'block' : 'none';
     });
   }
 
-  // --- CLIENTES ---
+  // =========================================================
+  // 2. GESTIÓN DE CLIENTES
+  // =========================================================
   const inputDoc = document.getElementById('saleClientDoc');
+  const btnSearch = document.getElementById('btnSearchClient'); 
   const infoBox = document.getElementById('clientInfoBox');
   const foundMsg = document.getElementById('foundClientMsg');
   const newClientForm = document.getElementById('newClientForm');
-  const selectedClientId = document.getElementById('selectedClientId'); 
-
+  
   let resultsList = document.getElementById('clientSearchResults');
   if (!resultsList && inputDoc) {
       resultsList = document.createElement('div');
       resultsList.id = 'clientSearchResults';
-      resultsList.style.cssText = "position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:1000; display:none; border-radius: 0 0 5px 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: #333;"; 
+      resultsList.style.cssText = "position:absolute; background:white; border:1px solid #ccc; width:100%; max-height:150px; overflow-y:auto; z-index:1000; display:none; color:#333; border-radius:0 0 5px 5px; box-shadow:0 4px 6px rgba(0,0,0,0.1);"; 
       inputDoc.parentNode.style.position = 'relative'; 
       inputDoc.parentNode.appendChild(resultsList);
   }
 
   function resetClientSection() {
       if(inputDoc) inputDoc.value = '';
-      if(selectedClientId) selectedClientId.value = '';
+      currentClientId = null;
       if(infoBox) infoBox.style.display = 'none';
       if(foundMsg) foundMsg.style.display = 'none';
       if(newClientForm) newClientForm.style.display = 'none';
@@ -102,37 +107,43 @@ document.addEventListener('DOMContentLoaded', () => {
           if(term.length === 0) { resetClientSection(); return; }
           debounceTimer = setTimeout(() => searchClients(term), 300);
       });
+      // Bloquear Enter
+      inputDoc.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+              e.preventDefault();
+              const term = e.target.value.trim();
+              if(term) searchClients(term);
+          }
+      });
+  }
+
+  // Botón Lupa
+  if(btnSearch) {
+      btnSearch.type = "button"; 
+      btnSearch.addEventListener('click', (e) => {
+          e.preventDefault();
+          const doc = inputDoc.value.trim();
+          if(!doc) { alert('Ingrese un documento'); return; }
+          searchClients(doc);
+      });
   }
 
   async function searchClients(term) {
       try {
           const res = await fetch(`/api/clientes/buscar/${term}`);
-          
-          if (res.ok) {
-            // CAPTURAMOS LA RESPUESTA COMPLETA DEL BACKEND (Trae el objeto Venta creado)
-            const ventaGuardada = await res.json(); 
-
-            // alert('¡Venta Exitosa!'); // Puedes quitar esto si el confirm es suficiente
-            
-            // PREGUNTAR SI IMPRIMIR
-            if(confirm('Venta registrada exitosamente.\n¿Desea generar el comprobante PDF?')) {
-                if(window.printSaleReceipt) {
-                    window.printSaleReceipt(ventaGuardada);
-                } else {
-                    console.error("Falta cargar pdfService.js");
-                }
-            }
-
-            closeSaleModal();
-            renderSalesToday();
-            if(window.renderInventory) window.renderInventory();
-            if(window.refreshAll) window.refreshAll(); 
-        }
+          if(res.ok) {
+              const clientes = await res.json();
+              if(clientes.length > 0) showSearchResults(clientes);
+              else mostrarFormularioNuevo();
+          } else {
+              mostrarFormularioNuevo();
+          }
       } catch(err) { console.error(err); }
   }
 
   function mostrarFormularioNuevo() {
-      selectedClientId.value = ''; 
+      if(resultsList) resultsList.style.display = 'none';
+      currentClientId = null;
       infoBox.style.display = 'block';
       foundMsg.style.display = 'none';
       newClientForm.style.display = 'block';
@@ -163,24 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function selectClient(c) {
       inputDoc.value = c.documento;
-      selectedClientId.value = c.id; 
+      currentClientId = c.id; 
+      
       if(resultsList) resultsList.style.display = 'none';
       infoBox.style.display = 'block';
+      
       const nombre = `${c.primerNombre} ${c.primerApellido}`;
       document.getElementById('foundClientName').textContent = nombre;
+      
       foundMsg.style.display = 'block';
       newClientForm.style.display = 'none';
   }
 
-  const btnSearch = document.getElementById('btnSearchClient');
-  if(btnSearch) {
-      btnSearch.addEventListener('click', () => {
-          const doc = inputDoc.value.trim();
-          if(doc) searchClients(doc);
-      });
-  }
-
-  // --- PRODUCTOS ---
+  // =========================================================
+  // 3. PRODUCTOS
+  // =========================================================
   async function loadProductsInSaleSelect() {
     try {
       const res = await fetch('/api/productos');
@@ -193,12 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
         opt.textContent = `${p.codigo} — ${p.nombre} (Stock: ${p.totalUnidades})`;
         selProduct.appendChild(opt);
       });
-    } catch (err) { console.error(err); }
+    } catch (e){}
   }
 
-  function getSelectedProduct() {
-    return productsCache.find(p => p.id == selProduct.value);
-  }
+  function getSelectedProduct() { return productsCache.find(p => p.id == selProduct.value); }
 
   function loadPackSizesForSelected() {
     const p = getSelectedProduct();
@@ -225,50 +231,47 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================
-  // 4. ENVIAR VENTA (POST) - ¡CORREGIDO!
+  // 4. SUBMIT VENTA
   // =========================================================
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const p = getSelectedProduct();
     if (!p) { alert('Seleccione un producto'); return; }
 
+    // Cantidad
     const mode = document.querySelector('#saleMode .active')?.dataset.mode || 'unit';
     let units = 0;
-
-    if (mode === 'unit') {
-      units = Number(document.getElementById('saleUnits').value);
-    } else if (mode === 'pack') {
-      const s = Number(document.getElementById('salePackSize').value);
-      const q = Number(document.getElementById('salePackQty').value);
-      units = s * q;
-    } else { 
-      const s = Number(document.getElementById('salePackSizeMixed').value);
-      const q = Number(document.getElementById('salePackQtyMixed').value);
-      const u = Number(document.getElementById('saleUnitsMixed').value);
-      units = (s * q) + u;
-    }
+    if (mode === 'unit') units = Number(document.getElementById('saleUnits').value);
+    else if (mode === 'pack') units = Number(document.getElementById('salePackSize').value) * Number(document.getElementById('salePackQty').value);
+    else units = (Number(document.getElementById('salePackSizeMixed').value) * Number(document.getElementById('salePackQtyMixed').value)) + Number(document.getElementById('saleUnitsMixed').value);
 
     if (units <= 0) { alert('Cantidad inválida'); return; }
 
-    // --- MANEJO DE CLIENTE ---
-    let idCliente = selectedClientId.value;
+    // Precio
+    const precioInput = Number(document.getElementById('salePrice').value);
 
-    // Si es nuevo (formulario visible y sin ID)
+    // Cliente
+    let idCliente = currentClientId;
+    const docValue = inputDoc.value.trim();
+
+    // Validación si escribió pero no seleccionó
+    if (docValue && !idCliente && newClientForm.style.display !== 'block') {
+        alert("Seleccione un cliente de la lista o complete el registro de nuevo cliente.");
+        return;
+    }
+
+    // Cliente Nuevo
     if (!idCliente && newClientForm.style.display === 'block') {
-        const doc = inputDoc.value.trim();
         const n1 = document.getElementById('nc_name1').value.trim();
         const l1 = document.getElementById('nc_last1').value.trim();
-        
-        if(!doc || !n1 || !l1) { alert('Datos incompletos para nuevo cliente'); return; }
+        if(!docValue || !n1 || !l1) { alert('Faltan datos del cliente nuevo'); return; }
 
         try {
-            // 1. CREAR CLIENTE
-            const resCli = await fetch('/api/clientes', {
+            const res = await fetch('/api/clientes', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    documento: doc,
-                    primerNombre: n1,
+                    documento: docValue, primerNombre: n1,
                     segundoNombre: document.getElementById('nc_name2').value,
                     primerApellido: l1,
                     segundoApellido: document.getElementById('nc_last2').value,
@@ -277,35 +280,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     direccion: "Local"
                 })
             });
-            if(!resCli.ok) throw new Error(await resCli.text());
-            
-            // 2. RECIBIR EL NUEVO CLIENTE (INCLUYENDO SU ID)
-            const nuevo = await resCli.json();
-            idCliente = nuevo.id; // <--- AQUÍ CAPTURAMOS EL ID DEL NUEVO
-            
-            console.log("Cliente nuevo creado con ID:", idCliente); // Debug
-        } catch(err) { 
-            alert('Error creando cliente: ' + err.message); 
-            return; // Detener venta si falló el cliente
-        }
+            if(!res.ok) throw new Error(await res.text());
+            const nuevo = await res.json();
+            idCliente = nuevo.id;
+        } catch(err) { alert(err.message); return; }
     }
 
-    // Enviar Venta
+    // Enviar
     const usuario = JSON.parse(localStorage.getItem('usuarioSesion'));
+    const ventaDTO = {
+        productoId: p.id,
+        usuarioId: usuario ? usuario.id : 1, 
+        cantidad: units,
+        clienteId: idCliente ? Number(idCliente) : null,
+        precioVenta: precioInput
+    };
+
     try {
         const res = await fetch('/api/ventas', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                productoId: p.id,
-                usuarioId: usuario ? usuario.id : 1,
-                cantidad: units,
-                clienteId: idCliente ? Number(idCliente) : null // ENVIAMOS EL ID CONFIRMADO
-            })
+            body: JSON.stringify(ventaDTO)
         });
 
         if (res.ok) {
-            alert('¡Venta Exitosa!');
+            const ventaGuardada = await res.json();
+            
+            // PDF Recibo
+            if(confirm('Venta registrada. ¿Generar Tiquet PDF?')) {
+                if(window.printSaleReceipt) window.printSaleReceipt(ventaGuardada);
+            }
+
             closeSaleModal();
             renderSalesToday();
             if(window.renderInventory) window.renderInventory();
@@ -316,18 +321,40 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) { alert('Error de conexión'); }
   });
 
-  // --- RENDERS ---
+  // =========================================================
+  // 5. HISTORIAL Y PDF REPORTE
+  // =========================================================
+  
+  // --- BOTÓN GENERAR PDF DE HISTORIAL (Movido aquí adentro) ---
+  const btnPdf = document.getElementById('btnPDFVentas');
+  if (btnPdf) {
+      btnPdf.addEventListener('click', () => {
+          if (!currentSalesList || currentSalesList.length === 0) {
+              alert("No hay ventas en la tabla para generar el reporte.");
+              return;
+          }
+          
+          const d = document.getElementById('f_desde').value;
+          const h = document.getElementById('f_hasta').value;
+          const rango = (d && h) ? `${d} a ${h}` : "Histórico Completo";
+
+          if (window.printSalesReport) {
+              window.printSalesReport(currentSalesList, rango);
+          } else {
+              console.error("Falta pdfService.js");
+          }
+      });
+  }
+
+  // Renders
   window.renderSales = () => renderSalesToday();
 
   async function renderSalesToday() {
     const now = new Date();
-    // Construir fecha local YYYY-MM-DD
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     const hoy = `${year}-${month}-${day}`;
-    
-    // Llamar al backend con el filtro de hoy
     await renderSalesHistory({ desde: hoy, hasta: hoy }, 'salesTodayBody');
   }
 
@@ -341,6 +368,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         const res = await fetch(url);
         const ventas = await res.json();
+        
+        // Guardamos en la variable global para el PDF
+        currentSalesList = ventas; 
+        
         tbody.innerHTML = '';
 
         if(!ventas.length) {
@@ -356,18 +387,13 @@ document.addEventListener('DOMContentLoaded', () => {
             tGanancia += v.ganancia || 0;
             
             let cliName = 'General';
-            if (v.cliente) {
-                cliName = `${v.cliente.primerNombre} ${v.cliente.primerApellido}`;
-            } else if (v.clienteId) { 
-                cliName = 'ID: ' + v.clienteId;
-            }
+            if (v.cliente) cliName = `${v.cliente.primerNombre} ${v.cliente.primerApellido}`;
             
             tbody.innerHTML += `
                 <tr>
                     <td>${new Date(v.fecha).toLocaleString()}</td>
                     <td>${v.producto?.nombre || 'Eliminado'}</td>
-                    <td>${v.cantidad} un.</td>
-                    <td>${v.cantidad}</td>
+                    <td>${v.cantidad} u</td>
                     <td>${money(v.totalVenta)}</td>
                     <td>${money(v.costoTotal)}</td>
                     <td>${money(v.ganancia)}</td>

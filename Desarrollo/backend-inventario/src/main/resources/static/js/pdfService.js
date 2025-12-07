@@ -14,7 +14,7 @@ window.printSaleReceipt = function(venta) {
     
     // 1. ENCABEZADO
     const company = "EMPLANORTE S.A.S";
-    const nit = "NIT: 900.123.456-7"; // Pon tu NIT real aquí
+    const nit = "NIT: 900.695.563-1"; // Pon tu NIT real aquí 9006955631
     const addr = "Cúcuta, Norte de Santander";
     
     // Centrar texto
@@ -99,3 +99,83 @@ window.printSaleReceipt = function(venta) {
 function moneyFmt(val) {
     return '$' + (val || 0).toLocaleString('es-CO');
 }
+
+// ... (código anterior de printSaleReceipt) ...
+
+// ================== REPORTE DE HISTORIAL DE VENTAS ==================
+window.printSalesReport = function(ventas, rangoFechas) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF(); // Por defecto A4 vertical
+
+    // 1. TÍTULO Y FECHA
+    doc.setFontSize(18);
+    doc.text("Reporte de Ventas - Emplanorte", 14, 20);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    const fechaImpresion = new Date().toLocaleString();
+    doc.text(`Generado el: ${fechaImpresion}`, 14, 28);
+    
+    if(rangoFechas) {
+        doc.text(`Filtro: ${rangoFechas}`, 14, 33);
+    }
+
+    // 2. CÁLCULO DE TOTALES PARA EL ENCABEZADO
+    let totalVenta = 0;
+    let totalGanancia = 0;
+    
+    const tableData = ventas.map(v => {
+        totalVenta += v.totalVenta;
+        totalGanancia += v.ganancia;
+        
+        // Formatear cliente
+        let cliente = "General";
+        if (v.cliente) cliente = `${v.cliente.primerNombre} ${v.cliente.primerApellido}`;
+        else if (v.clienteId) cliente = "ID: " + v.clienteId;
+
+        // Formatear fecha
+        const fechaVenta = new Date(v.fecha).toLocaleDateString() + ' ' + new Date(v.fecha).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        return [
+            fechaVenta,
+            v.producto ? v.producto.nombre : "Borrado",
+            v.cantidad,
+            moneyFmt(v.totalVenta),
+            moneyFmt(v.costoTotal),
+            moneyFmt(v.ganancia),
+            cliente
+        ];
+    });
+
+    // 3. TABLA DE DATOS (Usando autoTable)
+    doc.autoTable({
+        startY: 40,
+        head: [['Fecha', 'Producto', 'Cant.', 'Total Venta', 'Costo', 'Ganancia', 'Cliente']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold' },
+        styles: { fontSize: 8, cellPadding: 2 },
+        columnStyles: {
+            0: { cellWidth: 25 }, // Fecha
+            1: { cellWidth: 'auto' }, // Producto (autoajuste)
+            2: { cellWidth: 15, halign: 'center' }, // Cant
+            3: { cellWidth: 22, halign: 'right' }, // Venta
+            4: { cellWidth: 22, halign: 'right' }, // Costo
+            5: { cellWidth: 22, halign: 'right' }, // Ganancia
+            6: { cellWidth: 30 }  // Cliente
+        }
+    });
+
+    // 4. TOTALES FINALES
+    let finalY = doc.lastAutoTable.finalY + 10;
+    
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    doc.setFont("helvetica", "bold");
+    
+    doc.text(`TOTAL VENTAS: ${moneyFmt(totalVenta)}`, 14, finalY);
+    doc.text(`TOTAL GANANCIA: ${moneyFmt(totalGanancia)}`, 80, finalY);
+
+    // Abrir PDF
+    window.open(doc.output('bloburl'), '_blank');
+};
