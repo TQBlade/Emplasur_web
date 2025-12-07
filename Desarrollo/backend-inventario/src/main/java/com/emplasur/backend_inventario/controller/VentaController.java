@@ -64,4 +64,15 @@ public class VentaController {
         // Si no hay filtro, devolver 
         return ventaService.listarVentas();
     }
-}
+
+    @PostMapping("/batch")
+    public ResponseEntity<?> registrarLote(@RequestBody List<VentaDTO> ventasDTO) {
+        try {
+            // Ahora devuelve la lista de ventas (JSON), no un texto
+            List<Venta> ventas = ventaService.registrarVentasEnLote(ventasDTO);
+            return ResponseEntity.ok(ventas);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}   

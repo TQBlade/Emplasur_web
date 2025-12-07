@@ -298,119 +298,98 @@
 
 <!-- ========= MODAL REGISTRAR VENTA ========= -->
 <div class="modal-backdrop" id="saleModal" style="display:none">
-  <div class="modal">
-    <div class="modal-hd">
-      <strong><i class="fa-solid fa-receipt"></i> Registrar venta</strong>
+  <div class="modal" style="max-width: 900px; width: 95%;"> <div class="modal-hd">
+      <strong><i class="fa-solid fa-cart-shopping"></i> Nueva Venta (Carrito)</strong>
       <button class="close" data-close="saleModal"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div class="modal-bd">
-      <form class="form" id="saleForm">
-        <div class="label">Producto</div>
-        <select class="select" id="saleProduct"></select>
-
-        <div style="margin:12px 0 6px" class="label">Modo de venta</div>
-        <div class="pill-toggle" id="saleMode">
-          <button type="button" data-mode="unit" class="active">Unidades</button>
-          <button type="button" data-mode="pack">Pacas</button>
-          <button type="button" data-mode="mixed">Mixto</button>
-        </div>
-
-        <!-- UNIDADES -->
-        <div id="saleUnitsBox" style="margin-top:12px">
-          <div class="label">Cantidad (unidades)</div>
-          <input class="input" type="number" id="saleUnits" min="1" value="1">
-        </div>
-
-        <!-- PACAS -->
-        <div id="salePacksBox" style="display:none; margin-top:12px">
-          <div class="row">
-            <div>
-              <div class="label">Tamaño de paca (u)</div>
-              <select class="select" id="salePackSize"></select>
-            </div>
-            <div>
-              <div class="label">Cantidad de pacas</div>
-              <input class="input" type="number" id="salePackQty" min="1" value="1">
-            </div>
-          </div>
-        </div>
-
-        <!-- MIXTO: PACAS + UNIDADES SUELTAS -->
-        <div id="saleMixedBox" style="display:none; margin-top:12px">
-          <div class="row">
-            <div>
-              <div class="label">Tamaño de paca (u)</div>
-              <select class="select" id="salePackSizeMixed"></select>
-            </div>
-            <div>
-              <div class="label">Cantidad de pacas</div>
-              <input class="input" type="number" id="salePackQtyMixed" min="0" value="0">
-            </div>
-          </div>
-          <div style="margin-top:12px">
-            <div class="label">Unidades sueltas</div>
-            <input class="input" type="number" id="saleUnitsMixed" min="0" value="0">
-          </div>
-        </div>
-
-        <div style="margin-top:12px">
-          <div class="label">Precio unitario de venta</div>
-          <input class="input" type="number" id="salePrice" min="0" value="0">
-          <div class="helper">
-            Por defecto toma el precio unitario del producto, puedes modificarlo.
-          </div>
-        </div>
-
-        <div style="margin-top:12px; border-top:1px solid #eee; padding-top:10px;">
-          <div class="label" style="margin-bottom:5px">Cliente</div>
+    
+    <div class="modal-bd" style="display: flex; gap: 20px; flex-wrap: wrap;">
+      
+      <div style="flex: 1; min-width: 300px;">
+        <form class="form" id="saleForm">
           
-          <div class="row" style="gap:5px">
-            <div style="flex:1">
-              <input class="input" id="saleClientDoc" placeholder="Documento de identidad">
+          <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+            <div class="label" style="margin-bottom:5px">1. Seleccionar Cliente</div>
+            <div class="row" style="gap:5px">
+              <div style="flex:1">
+                <input class="input" id="saleClientDoc" placeholder="Buscar documento...">
+              </div>
+              <button type="button" id="btnSearchClient" class="btn-secondary" style="width:auto">
+                <i class="fa-solid fa-search"></i>
+              </button>
             </div>
-            <button type="button" id="btnSearchClient" class="btn-secondary" style="width:auto">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </div>
-
-          <div id="clientInfoBox" style="margin-top:8px; padding:10px; background:#f8f9fa; border-radius:6px; display:none;">
-            <input type="hidden" id="selectedClientId">
-            <div id="foundClientMsg" style="color:#2ecc71; font-weight:600; display:none; margin-bottom:5px">
-              <i class="fa-solid fa-check-circle"></i> <span id="foundClientName"></span>
-            </div>
-
-            <div id="newClientForm" style="display:none">
-              <div style="color:#e67e22; font-size:0.9em; margin-bottom:5px">
-                <i class="fa-solid fa-circle-exclamation"></i> Cliente nuevo. Complete los datos:
-              </div>
-              <div class="row">
-                <input class="input" id="nc_name1" placeholder="1er Nombre *">
-                <input class="input" id="nc_name2" placeholder="2do Nombre">
-              </div>
-              <div class="row" style="margin-top:5px">
-                <input class="input" id="nc_last1" placeholder="1er Apellido *">
-                <input class="input" id="nc_last2" placeholder="2do Apellido">
-              </div>
-              <div class="row" style="margin-top:5px">
-                <input class="input" id="nc_tel" placeholder="Teléfono">
-                <input class="input" id="nc_email" placeholder="Email">
+            
+            <div id="clientInfoBox" style="margin-top:8px; display:none;">
+              <input type="hidden" id="selectedClientId">
+              <div id="foundClientMsg" style="color:#2ecc71; font-weight:bold;"></div>
+              
+              <div id="newClientForm" style="display:none; margin-top:5px">
+                <div style="color:#e67e22; font-size:0.8em; margin-bottom:5px">Cliente nuevo:</div>
+                <div class="row"><input class="input" id="nc_name1" placeholder="1er Nombre"><input class="input" id="nc_name2" placeholder="2do Nombre"></div>
+                <div class="row" style="margin-top:5px"><input class="input" id="nc_last1" placeholder="1er Apellido"><input class="input" id="nc_last2" placeholder="2do Apellido"></div>
+                <div class="row" style="margin-top:5px"><input class="input" id="nc_tel" placeholder="Tel"><input class="input" id="nc_email" placeholder="Email"></div>
               </div>
             </div>
           </div>
+
+          <div class="label">2. Agregar Producto</div>
+          <select class="select" id="saleProduct"></select>
+
+          <div style="margin:8px 0 4px" class="label">Modo</div>
+          <div class="pill-toggle" id="saleMode">
+            <button type="button" data-mode="unit" class="active">Unidades</button>
+            <button type="button" data-mode="pack">Pacas</button>
+          </div>
+
+          <div id="saleUnitsBox" style="margin-top:8px">
+            <div class="label">Cant. Unidades</div>
+            <input class="input" type="number" id="saleUnits" min="1" value="1">
+          </div>
+          <div id="salePacksBox" style="display:none; margin-top:8px">
+            <div class="row">
+              <div><div class="label">Tamaño</div><select class="select" id="salePackSize"></select></div>
+              <div><div class="label">Cant.</div><input class="input" type="number" id="salePackQty" min="1" value="1"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:8px">
+            <div class="label">Precio Unit. (Editables)</div>
+            <input class="input" type="number" id="salePrice" min="0">
+          </div>
+
+          <button type="submit" class="btn-secondary" style="width:100%; margin-top:15px; border:1px solid var(--primary); color:var(--primary)">
+            <i class="fa-solid fa-plus"></i> Agregar al Carrito
+          </button>
+        </form>
+      </div>
+
+      <div style="flex: 1.2; min-width: 300px; display: flex; flex-direction: column;">
+        <div class="label">3. Resumen del Pedido</div>
+        <div class="table-wrap" style="flex:1; max-height:300px; overflow-y:auto; border:1px solid #eee; border-radius:8px;">
+          <table style="font-size:0.9em">
+            <thead style="position:sticky; top:0; background:white; z-index:1">
+              <tr>
+                <th>Prod</th>
+                <th>Cant</th>
+                <th>Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cartBody">
+              </tbody>
+          </table>
+        </div>
+        
+        <div style="margin-top:10px; padding:10px; background:#f0f4f8; border-radius:8px; display:flex; justify-content:space-between; align-items:center">
+          <strong>TOTAL A PAGAR:</strong>
+          <strong id="cartTotalDisplay" style="font-size:1.2em; color:var(--primary)">$0</strong>
         </div>
 
-        <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:10px">
-          <button type="button" class="btn-primary" style="background:#263752;color:#d7e4ff" data-close="saleModal">
-            <i class="fa-solid fa-circle-xmark"></i> Cancelar
-          </button>
-          <button class="btn-primary" type="submit">
-            <i class="fa-solid fa-floppy-disk"></i> Registrar venta
-          </button>
-        </div>
-        <div class="helper" style="margin-top:10px">
-          La rebaja se hace por <b>FIFO</b>: primero unidades sueltas y luego pacas de los lotes más antiguos.
-        </div>
-      </form>
+        <button id="btnFinalizeSale" class="btn-primary" style="width:100%; margin-top:10px">
+          <i class="fa-solid fa-check"></i> FINALIZAR VENTA
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

@@ -113,4 +113,16 @@ public class VentaService {
     public List<Venta> listarVentas() {
         return ventaRepository.findAll();
     }
+
+    
+    // NUEVO MÉTODO: Registrar múltiples ventas (Carrito)
+    // CAMBIAR 'void' por 'List<Venta>'
+    @Transactional
+    public List<Venta> registrarVentasEnLote(List<VentaDTO> listaVentas) {
+        List<Venta> ventasGuardadas = new java.util.ArrayList<>();
+        for (VentaDTO dto : listaVentas) {
+            ventasGuardadas.add(this.registrarVenta(dto)); // Agregamos a la lista
+        }
+        return ventasGuardadas; // Devolvemos la lista completa
+    }
 }

@@ -698,3 +698,26 @@ select.select {
     color: #ffffff;
     border: 1px solid #374151; /* Borde sutil */
 }
+
+/* Corrección de Inputs en Modo Oscuro */
+.modal .input, 
+.modal .select {
+    background-color: #1f2937 !important; /* Gris oscuro */
+    color: #ffffff !important;            /* Texto blanco */
+    border: 1px solid #374151 !important;
+}
+
+/* Color del placeholder */
+.modal .input::placeholder {
+    color: #9ca3af;
+}
+
+/* Lista desplegable del buscador */
+#clientSearchResults {
+    background-color: #1f2937 !important;
+    color: #fff !important;
+    border: 1px solid #374151 !important;
+}
+#clientSearchResults div:hover {
+    background-color: #374151 !important;
+}
