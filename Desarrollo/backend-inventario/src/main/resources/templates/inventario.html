@@ -30,6 +30,7 @@
       <li><a href="#" data-tab="sales"><i class="fa-solid fa-receipt"></i>Ventas</a></li>
       <li><a href="#" data-tab="products"><i class="fa-solid fa-box-open"></i>Productos</a></li>
       <li><a href="#" data-tab="clients"><i class="fa-solid fa-users"></i>Clientes</a></li>
+      <li><a href="#" data-tab="reports"><i class="fa-solid fa-chart-pie"></i>Reportes</a></li>
     </ul>
 
     <div class="userbar">
@@ -290,6 +291,51 @@
             </thead>
             <tbody id="cliBody"></tbody>
           </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REPORTES ================= -->
+     <section class="section" id="reportsSection" style="display:none">
+      <div class="card">
+        <div class="section-hd">
+          <div style="font-weight:800"><i class="fa-solid fa-chart-pie"></i> Inteligencia de Negocio</div>
+          <button class="btn-primary" onclick="loadCharts()">
+            <i class="fa-solid fa-rotate"></i> Actualizar
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+          <div class="card" style="padding: 15px; border: 1px solid #eee;">
+            <h4 style="margin-bottom: 10px;">🏆 Top 5 Más Vendidos</h4>
+            <canvas id="chartTopProducts"></canvas>
+          </div>
+
+          <div class="card" style="padding: 15px; border: 1px solid #eee;">
+            <h4 style="margin-bottom: 10px;">💰 Balance Semanal</h4>
+            <canvas id="chartBalance"></canvas>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px; border: 1px solid #eee;">
+          <div class="section-hd small-hd" style="background: #fff3cd; color: #856404;">
+            <div><i class="fa-solid fa-triangle-exclamation"></i> Productos sin movimiento (30 días)</div>
+          </div>
+          <div class="table-wrap">
+            <table style="width: 100%;">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Producto</th>
+                  <th>Categoría</th>
+                  <th>Stock Estancado</th>
+                </tr>
+              </thead>
+              <tbody id="bodyHueso">
+                <tr><td colspan="4" class="text-center">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -601,6 +647,8 @@
 <script src="js/pdfService.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/reportes.js"></script>
 
 </body>
 </html>

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const tab = a.dataset.tab; 
       
       // Ocultar todas las secciones
-      ['inventory', 'sales', 'products', 'clients'].forEach(s => {
+      ['inventory', 'sales', 'products', 'clients', 'reports'].forEach(s => {
           const el = document.getElementById(s + 'Section');
           if(el) el.style.display = 'none';
       });
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (tab === 'products' && window.renderProducts) window.renderProducts();
       if (tab === 'sales' && window.renderSales) window.renderSales();
       if (tab === 'clients' && window.renderClients) window.renderClients();
+      if (tab === 'reports' && window.loadCharts) window.loadCharts();
     });
   }
 });
