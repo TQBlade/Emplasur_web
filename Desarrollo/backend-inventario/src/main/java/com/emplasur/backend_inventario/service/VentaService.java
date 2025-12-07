@@ -33,7 +33,7 @@ public class VentaService {
     @Autowired
     private ClienteRepository clienteRepository; // Asegúrate de tener esto
 
-    @Transactional
+@Transactional
     public Venta registrarVenta(VentaDTO ventaDTO) {
         // 1. Buscar Producto
         Producto producto = productoRepository.findById(ventaDTO.getProductoId())
@@ -76,24 +76,31 @@ public class VentaService {
         venta.setUsuario(usuarioRepository.findById(ventaDTO.getUsuarioId()).orElse(null));
         venta.setCantidad(ventaDTO.getCantidad());
         
-        // CORRECCIÓN: Usar precio personalizado si viene del formulario, sino usar el del producto
-        double precioFinal;
+        // --- CÁLCULOS FINANCIEROS (ESTO ES LO QUE FALLABA) ---
+        
+        // A. Precio de Venta (Usar el personalizado o el base)
+        double precioVentaFinal = producto.getPrecioUnitario();
         if (ventaDTO.getPrecioVenta() != null && ventaDTO.getPrecioVenta() > 0) {
-            precioFinal = ventaDTO.getPrecioVenta();
-        } else {
-            precioFinal = producto.getPrecioUnitario();
+            precioVentaFinal = ventaDTO.getPrecioVenta();
         }
+        venta.setTotalVenta(precioVentaFinal * ventaDTO.getCantidad());
         
-        venta.setTotalVenta(precioFinal * ventaDTO.getCantidad());
+        // B. Costo Total (CRÍTICO: Validar nulos)
+        double costoUnitario = (producto.getCosto() != null) ? producto.getCosto() : 0.0;
+        double costoTotalCalculado = costoUnitario * ventaDTO.getCantidad();
+        venta.setCostoTotal(costoTotalCalculado); // <--- Guardamos explícitamente
+
+        // C. Ganancia (CRÍTICO: Venta - Costo)
+        double gananciaCalculada = venta.getTotalVenta() - costoTotalCalculado;
+        venta.setGanancia(gananciaCalculada); // <--- Guardamos explícitamente
         
-        // ===================================================================
-        // 5. ASIGNAR CLIENTE (¡ESTO ERA LO QUE FALTABA!)
-        // ===================================================================
+        // -----------------------------------------------------
+        
+        // Cliente
         if (ventaDTO.getClienteId() != null) {
             Cliente cliente = clienteRepository.findById(ventaDTO.getClienteId()).orElse(null);
             venta.setCliente(cliente);
         }
-        // ===================================================================
 
         return ventaRepository.save(venta);
     }

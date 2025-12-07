@@ -1,4 +1,4 @@
-// ================== VENTAS (VERSIÓN FINAL CON PDF Y BÚSQUEDA) ==================
+// ================== VENTAS (VERSIÓN FINAL - TABLA CORREGIDA) ==================
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('saleForm');
@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const secHist    = document.getElementById('saleHistorySection');
   const saleModal  = document.getElementById('saleModal');
 
-  // Cache y Variables Globales
+  // Cache y Variables
   let productsCache = [];
   let currentClientId = null; 
-  let currentSalesList = []; // Vital para el PDF
+  let currentSalesList = []; // Para el PDF
 
   if (!form) return;
 
@@ -40,6 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset();
     resetClientSection(); 
     if (saleModal) saleModal.style.display = 'flex';
+    // Sincronizar precio inicial
+    setTimeout(() => {
+        if(selProduct.value) {
+            const p = getSelectedProduct();
+            if(p) document.getElementById('salePrice').value = p.precioUnitario;
+        }
+    }, 100);
   }
 
   function closeSaleModal() {
@@ -63,24 +70,20 @@ document.addEventListener('DOMContentLoaded', () => {
       saleModeButtons.querySelectorAll('button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const mode = btn.dataset.mode;
-      const uBox = document.getElementById('saleUnitsBox');
-      const pBox = document.getElementById('salePacksBox');
-      const mBox = document.getElementById('saleMixedBox');
-      if(uBox) uBox.style.display  = mode === 'unit'  ? 'block' : 'none';
-      if(pBox) pBox.style.display  = mode === 'pack'  ? 'block' : 'none';
-      if(mBox) mBox.style.display = mode === 'mixed' ? 'block' : 'none';
+      document.getElementById('saleUnitsBox').style.display  = mode === 'unit'  ? 'block' : 'none';
+      document.getElementById('salePacksBox').style.display  = mode === 'pack'  ? 'block' : 'none';
+      document.getElementById('saleMixedBox').style.display = mode === 'mixed' ? 'block' : 'none';
     });
   }
 
-  // =========================================================
-  // 2. GESTIÓN DE CLIENTES
-  // =========================================================
+  // --- CLIENTES ---
   const inputDoc = document.getElementById('saleClientDoc');
   const btnSearch = document.getElementById('btnSearchClient'); 
   const infoBox = document.getElementById('clientInfoBox');
   const foundMsg = document.getElementById('foundClientMsg');
   const newClientForm = document.getElementById('newClientForm');
-  
+  const selectedClientId = document.getElementById('selectedClientId'); 
+
   let resultsList = document.getElementById('clientSearchResults');
   if (!resultsList && inputDoc) {
       resultsList = document.createElement('div');
@@ -147,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
       infoBox.style.display = 'block';
       foundMsg.style.display = 'none';
       newClientForm.style.display = 'block';
-      
       document.getElementById('nc_name1').value = '';
       document.getElementById('nc_last1').value = '';
   }
@@ -156,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsList.innerHTML = '';
       resultsList.style.display = 'block';
       infoBox.style.display = 'none'; 
-
       clientes.forEach(c => {
           const div = document.createElement('div');
           div.style.padding = '10px';
@@ -164,9 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
           div.style.borderBottom = '1px solid #eee';
           div.onmouseover = () => div.style.backgroundColor = '#f0f4f8';
           div.onmouseout = () => div.style.backgroundColor = 'white';
-          
-          const nombre = `${c.primerNombre} ${c.primerApellido}`;
-          div.innerHTML = `<strong>${c.documento}</strong> - ${nombre}`;
+          div.innerHTML = `<strong>${c.documento}</strong> - ${c.primerNombre} ${c.primerApellido}`;
           div.onclick = () => selectClient(c);
           resultsList.appendChild(div);
       });
@@ -175,20 +174,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function selectClient(c) {
       inputDoc.value = c.documento;
       currentClientId = c.id; 
-      
       if(resultsList) resultsList.style.display = 'none';
       infoBox.style.display = 'block';
-      
-      const nombre = `${c.primerNombre} ${c.primerApellido}`;
-      document.getElementById('foundClientName').textContent = nombre;
-      
+      document.getElementById('foundClientName').textContent = `${c.primerNombre} ${c.primerApellido}`;
       foundMsg.style.display = 'block';
       newClientForm.style.display = 'none';
   }
 
-  // =========================================================
-  // 3. PRODUCTOS
-  // =========================================================
+  // --- PRODUCTOS ---
   async function loadProductsInSaleSelect() {
     try {
       const res = await fetch('/api/productos');
@@ -230,15 +223,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // =========================================================
-  // 4. SUBMIT VENTA
-  // =========================================================
+  // --- SUBMIT ---
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const p = getSelectedProduct();
     if (!p) { alert('Seleccione un producto'); return; }
 
-    // Cantidad
     const mode = document.querySelector('#saleMode .active')?.dataset.mode || 'unit';
     let units = 0;
     if (mode === 'unit') units = Number(document.getElementById('saleUnits').value);
@@ -247,24 +237,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (units <= 0) { alert('Cantidad inválida'); return; }
 
-    // Precio
     const precioInput = Number(document.getElementById('salePrice').value);
-
-    // Cliente
     let idCliente = currentClientId;
     const docValue = inputDoc.value.trim();
 
-    // Validación si escribió pero no seleccionó
     if (docValue && !idCliente && newClientForm.style.display !== 'block') {
-        alert("Seleccione un cliente de la lista o complete el registro de nuevo cliente.");
+        alert("Seleccione un cliente de la lista o complete el registro.");
         return;
     }
 
-    // Cliente Nuevo
     if (!idCliente && newClientForm.style.display === 'block') {
         const n1 = document.getElementById('nc_name1').value.trim();
         const l1 = document.getElementById('nc_last1').value.trim();
-        if(!docValue || !n1 || !l1) { alert('Faltan datos del cliente nuevo'); return; }
+        if(!docValue || !n1 || !l1) { alert('Faltan datos del cliente'); return; }
 
         try {
             const res = await fetch('/api/clientes', {
@@ -286,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(err) { alert(err.message); return; }
     }
 
-    // Enviar
     const usuario = JSON.parse(localStorage.getItem('usuarioSesion'));
     const ventaDTO = {
         productoId: p.id,
@@ -305,12 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (res.ok) {
             const ventaGuardada = await res.json();
-            
-            // PDF Recibo
-            if(confirm('Venta registrada. ¿Generar Tiquet PDF?')) {
+            if(confirm('Venta registrada. ¿Generar PDF?')) {
                 if(window.printSaleReceipt) window.printSaleReceipt(ventaGuardada);
             }
-
             closeSaleModal();
             renderSalesToday();
             if(window.renderInventory) window.renderInventory();
@@ -321,32 +302,22 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) { alert('Error de conexión'); }
   });
 
-  // =========================================================
-  // 5. HISTORIAL Y PDF REPORTE
-  // =========================================================
-  
-  // --- BOTÓN GENERAR PDF DE HISTORIAL (Movido aquí adentro) ---
+  // --- BOTÓN PDF ---
   const btnPdf = document.getElementById('btnPDFVentas');
   if (btnPdf) {
       btnPdf.addEventListener('click', () => {
           if (!currentSalesList || currentSalesList.length === 0) {
-              alert("No hay ventas en la tabla para generar el reporte.");
+              alert("No hay ventas en la tabla.");
               return;
           }
-          
           const d = document.getElementById('f_desde').value;
           const h = document.getElementById('f_hasta').value;
           const rango = (d && h) ? `${d} a ${h}` : "Histórico Completo";
-
-          if (window.printSalesReport) {
-              window.printSalesReport(currentSalesList, rango);
-          } else {
-              console.error("Falta pdfService.js");
-          }
+          if (window.printSalesReport) window.printSalesReport(currentSalesList, rango);
       });
   }
 
-  // Renders
+  // --- RENDERS ---
   window.renderSales = () => renderSalesToday();
 
   async function renderSalesToday() {
@@ -368,23 +339,25 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         const res = await fetch(url);
         const ventas = await res.json();
-        
-        // Guardamos en la variable global para el PDF
-        currentSalesList = ventas; 
-        
+        currentSalesList = ventas;
         tbody.innerHTML = '';
 
         if(!ventas.length) {
             tbody.innerHTML = '<tr><td colspan="8" class="text-center">Sin datos</td></tr>';
+            updateSum(tableId, 0, 0, 0);
             return;
         }
 
         let tVenta=0, tCosto=0, tGanancia=0;
 
         ventas.forEach(v => {
-            tVenta += v.totalVenta;
-            tCosto += v.costoTotal || 0;
-            tGanancia += v.ganancia || 0;
+            const valVenta = v.totalVenta || 0;
+            const valCosto = v.costoTotal || 0;
+            const valGanancia = v.ganancia || 0;
+
+            tVenta += valVenta;
+            tCosto += valCosto;
+            tGanancia += valGanancia;
             
             let cliName = 'General';
             if (v.cliente) cliName = `${v.cliente.primerNombre} ${v.cliente.primerApellido}`;
@@ -393,31 +366,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 <tr>
                     <td>${new Date(v.fecha).toLocaleString()}</td>
                     <td>${v.producto?.nombre || 'Eliminado'}</td>
-                    <td>${v.cantidad} u</td>
-                    <td>${money(v.totalVenta)}</td>
-                    <td>${money(v.costoTotal)}</td>
-                    <td>${money(v.ganancia)}</td>
+                    <td>${v.cantidad} u</td> <td>${v.cantidad}</td>      <td>${money(valVenta)}</td>
+                    <td>${money(valCosto)}</td>
+                    <td>${money(valGanancia)}</td>
                     <td>${cliName}</td>
                 </tr>
             `;
         });
 
-        if(tableId === 'salesTodayBody') {
-             updateSum('sumVentasDia', tVenta);
-             updateSum('sumCostoDia', tCosto);
-             updateSum('sumGananciaDia', tGanancia);
-        } else {
-             updateSum('t_total', tVenta);
-             updateSum('t_costo', tCosto);
-             updateSum('t_ganancia', tGanancia);
-        }
+        console.log(`Totales calculados (${tableId}):`, tVenta, tCosto, tGanancia);
+        updateSum(tableId, tVenta, tCosto, tGanancia);
 
     } catch(e) { console.error(e); }
   }
 
-  function updateSum(id, val) {
-      const el = document.getElementById(id);
-      if(el) el.textContent = money(val);
+  function updateSum(tableId, vTotal, vCosto, vGanancia) {
+      let idTotal, idCosto, idGanancia;
+
+      if(tableId === 'salesTodayBody') {
+          idTotal = 'sumVentasDia';
+          idCosto = 'sumCostoDia';
+          idGanancia = 'sumGananciaDia';
+      } else {
+          idTotal = 't_total';
+          idCosto = 't_costo';
+          idGanancia = 't_ganancia';
+      }
+
+      const elTotal = document.getElementById(idTotal);
+      const elCosto = document.getElementById(idCosto);
+      const elGanancia = document.getElementById(idGanancia);
+      
+      if(elTotal) elTotal.textContent = money(vTotal);
+      if(elCosto) elCosto.textContent = money(vCosto);
+      if(elGanancia) {
+          elGanancia.textContent = money(vGanancia);
+          elGanancia.style.color = vGanancia < 0 ? '#ff4d4f' : '#2ecc71';
+      }
   }
 
   function money(v) { 
