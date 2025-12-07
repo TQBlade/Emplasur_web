@@ -721,3 +721,130 @@ select.select {
 #clientSearchResults div:hover {
     background-color: #374151 !important;
 }
+
+/* ================== CORRECCIÓN DE FORMULARIOS ================== */
+.input, .select, textarea {
+    background-color: #1f2937 !important; /* Fondo Oscuro */
+    color: #f3f4f6 !important;            /* Letra Clara */
+    border: 1px solid #374151 !important; /* Borde sutil */
+}
+
+.input:focus, .select:focus {
+    border-color: #84cc16 !important;     /* Verde Emplanorte al escribir */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(132, 204, 22, 0.2);
+}
+
+::placeholder {
+    color: #9ca3af !important; /* Gris claro para placeholders */
+}
+
+/* ================== PRELOADER (PANTALLA DE CARGA) ================== */
+#preloader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.9); /* Fondo oscuro semitransparente */
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #374151;
+    border-top: 5px solid #84cc16; /* Verde */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ================== MODAL DE ALERTA PERSONALIZADO ================== */
+.custom-alert-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-alert-box {
+    background: #111827; /* Fondo muy oscuro */
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid #374151;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    animation: slideUp 0.3s ease;
+}
+
+.custom-alert-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+.custom-alert-icon.success { color: #84cc16; }
+.custom-alert-icon.error { color: #ef4444; }
+.custom-alert-icon.question { color: #3b82f6; }
+
+.custom-alert-msg {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.custom-alert-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+/* ================== CORRECCIÓN DE FORMULARIOS (MODO OSCURO) ================== */
+
+/* Forzar estilo oscuro en todos los inputs, selects y botones dentro de modales */
+.modal input, 
+.modal select, 
+.modal textarea {
+    background-color: #1f2937 !important; /* Gris oscuro */
+    color: #ffffff !important;            /* Texto blanco */
+    border: 1px solid #374151 !important; /* Borde gris suave */
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+/* Color del texto de ayuda (placeholder) */
+.modal input::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Al hacer clic en un campo */
+.modal input:focus, 
+.modal select:focus {
+    border-color: #84cc16 !important; /* Verde corporativo */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(132, 204, 22, 0.2);
+}
+
+/* Lista desplegable de clientes (Buscador) */
+#clientSearchResults {
+    background-color: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    color: #ffffff !important;
+}
+#clientSearchResults div:hover {
+    background-color: #374151 !important; /* Color al pasar el mouse */
+}
