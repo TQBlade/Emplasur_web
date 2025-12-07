@@ -108,18 +108,26 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
           const res = await fetch(`/api/clientes/buscar/${term}`);
           
-          if(res.ok) {
-              const clientes = await res.json();
-              
-              // Si la lista tiene datos, mostramos resultados
-              if (clientes.length > 0) {
-                  showSearchResults(clientes);
-              } else {
-                  // Si la lista está vacía, mostramos formulario de nuevo cliente
-                  if(resultsList) resultsList.style.display = 'none';
-                  mostrarFormularioNuevo();
-              }
-          }
+          if (res.ok) {
+            // CAPTURAMOS LA RESPUESTA COMPLETA DEL BACKEND (Trae el objeto Venta creado)
+            const ventaGuardada = await res.json(); 
+
+            // alert('¡Venta Exitosa!'); // Puedes quitar esto si el confirm es suficiente
+            
+            // PREGUNTAR SI IMPRIMIR
+            if(confirm('Venta registrada exitosamente.\n¿Desea generar el comprobante PDF?')) {
+                if(window.printSaleReceipt) {
+                    window.printSaleReceipt(ventaGuardada);
+                } else {
+                    console.error("Falta cargar pdfService.js");
+                }
+            }
+
+            closeSaleModal();
+            renderSalesToday();
+            if(window.renderInventory) window.renderInventory();
+            if(window.refreshAll) window.refreshAll(); 
+        }
       } catch(err) { console.error(err); }
   }
 

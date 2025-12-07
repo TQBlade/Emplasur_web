@@ -125,3 +125,73 @@ document.addEventListener('DOMContentLoaded', () => {
   // Carga inicial
   window.renderInventory();
 });
+
+// ================== LOGICA DE ABASTECIMIENTO ==================
+
+const supplyModal = document.getElementById('supplyModal');
+const supplyForm = document.getElementById('supplyForm');
+const supplyProductSelect = document.getElementById('supplyProduct');
+
+// Abrir Modal
+window.openSupplyModal = async function() {
+    supplyForm.reset();
+    
+    // Cargar productos en el select
+    try {
+        const res = await fetch('/api/productos');
+        const productos = await res.json();
+        
+        supplyProductSelect.innerHTML = '<option value="">-- Seleccione Producto --</option>';
+        productos.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = `${p.codigo} - ${p.nombre}`;
+            supplyProductSelect.appendChild(opt);
+        });
+        
+        supplyModal.style.display = 'flex';
+    } catch(err) { console.error(err); }
+}
+
+window.closeSupplyModal = function() {
+    supplyModal.style.display = 'none';
+}
+
+// Enviar Formulario
+if(supplyForm) {
+    supplyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const prodId = supplyProductSelect.value;
+        if(!prodId) { alert('Seleccione un producto'); return; }
+
+        const dto = {
+            productoId: prodId,
+            cantidadPacas: Number(document.getElementById('supplyPackQty').value || 0),
+            tamanoPaca: Number(document.getElementById('supplyPackSize').value || 0),
+            unidadesSueltas: Number(document.getElementById('supplyLoose').value || 0),
+            nuevoCosto: Number(document.getElementById('supplyCost').value || 0)
+        };
+
+        if(dto.cantidadPacas === 0 && dto.unidadesSueltas === 0) {
+            alert('Debe ingresar al menos una cantidad (paca o suelta)');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/entradas', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(dto)
+            });
+
+            if(res.ok) {
+                alert('Entrada registrada correctamente');
+                closeSupplyModal();
+                window.renderInventory(); // Recargar tabla
+            } else {
+                alert('Error: ' + await res.text());
+            }
+        } catch(err) { console.error(err); alert('Error de conexión'); }
+    });
+}

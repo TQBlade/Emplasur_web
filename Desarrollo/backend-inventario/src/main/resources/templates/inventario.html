@@ -86,12 +86,17 @@
     <!-- ================= INVENTARIO ================= -->
     <section class="section" id="inventorySection">
       <div class="card">
-        <div class="section-hd">
-          <div style="font-weight:800"><i class="fa-solid fa-boxes-stacked"></i> Inventario Actual</div>
-          <div class="search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input id="invSearch" placeholder="Buscar por código o nombre...">
+        <div class="section-hd" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="font-weight:800"><i class="fa-solid fa-boxes-stacked"></i> Inventario Actual</div>
+            <div class="search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input id="invSearch" placeholder="Buscar por código o nombre...">
+            </div>
           </div>
+          <button class="btn-primary" onclick="openSupplyModal()">
+              <i class="fa-solid fa-truck-ramp-box"></i> Registrar Entrada
+          </button>
         </div>
 
         <div class="table-wrap">
@@ -564,6 +569,49 @@
   </div>
 </div>
 
+<!-- ========= MODAL REGISTRAR ENTRADA DE MERCANCÍA ========= -->
+<div class="modal-backdrop" id="supplyModal" style="display:none">
+  <div class="modal">
+    <div class="modal-hd">
+      <strong><i class="fa-solid fa-truck-ramp-box"></i> Registrar Entrada de Mercancía</strong>
+      <button class="close" onclick="closeSupplyModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-bd">
+      <form id="supplyForm">
+        <div class="label">Producto</div>
+        <select class="select" id="supplyProduct" required></select>
+
+        <div class="row" style="margin-top:10px">
+          <div>
+            <div class="label">Pacas (cantidad)</div>
+            <input class="input" type="number" id="supplyPackQty" min="0" placeholder="0">
+          </div>
+          <div>
+            <div class="label">Tamaño Paca (u)</div>
+            <input class="input" type="number" id="supplyPackSize" min="0" placeholder="0">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <div>
+            <div class="label">Unidades Sueltas</div>
+            <input class="input" type="number" id="supplyLoose" min="0" placeholder="0">
+          </div>
+          <div>
+            <div class="label">Nuevo Costo (Opcional)</div>
+            <input class="input" type="number" id="supplyCost" step="0.01" placeholder="Actualizar costo">
+          </div>
+        </div>
+
+        <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end">
+          <button type="button" class="btn-primary" style="background:#263752;color:#d7e4ff" onclick="closeSupplyModal()">Cancelar</button>
+          <button class="btn-primary" type="submit">Guardar Entrada</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- =============== SCRIPTS =============== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="js/app.js"></script>
@@ -571,6 +619,7 @@
 <script src="js/productos.js"></script>
 <script src="js/ventas.js"></script>
 <script src="js/clientes.js"></script>
+<script src="js/pdfService.js"></script>
 
 </body>
 </html>
