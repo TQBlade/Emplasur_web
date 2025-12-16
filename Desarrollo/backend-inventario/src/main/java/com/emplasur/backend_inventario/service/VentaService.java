@@ -41,7 +41,7 @@ public class VentaService {
         
         // 2. Validar Stock
         if (producto.getTotalUnidades() < ventaDTO.getCantidad()) {
-            throw new RuntimeException("Stock insuficiente");
+            throw new RuntimeException("Stock insuficiente, producto agotado");
         }
 
         // 3. FIFO (Descontar inventario)
